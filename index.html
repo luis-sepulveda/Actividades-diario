@@ -529,15 +529,11 @@ const _PRELOADED_DATA = [];
   </div>
 
   <!-- FILA 1: SUPERVISORES | TENDENCIA | TIPOS -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:7px;margin-bottom:7px;">
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:7px;">
     <div class="panel panel-flex">
       <div class="ptitle">Rendimiento por supervisor</div>
       <div id="sup-btns" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;min-height:0;"></div>
       <div id="supervisores"></div>
-    </div>
-    <div class="panel panel-flex">
-      <div class="ptitle">Actividades de: 1 — 2 — 3 Play completadas</div>
-      <div id="chart-play" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:1;"></div>
     </div>
     <div class="panel panel-flex">
       <div class="ptitle">Actividades completadas — no realizadas por ciudad</div>
@@ -555,12 +551,8 @@ const _PRELOADED_DATA = [];
     </div>
   </div>
 
-  <!-- ANILLOS + TENDENCIA -->
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:7px;">
-    <div class="panel">
-      <div class="ptitle">Total actividades: completadas — no realizadas — canceladas</div>
-      <div id="rings-wrap" style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:4px 0;"></div>
-    </div>
+  <!-- TENDENCIA -->
+  <div style="display:grid;grid-template-columns:1fr;gap:7px;margin-bottom:7px;">
     <div class="panel panel-flex">
       <div class="ptitle">Tendencia por fecha</div>
       <div style="display:flex;gap:12px;margin-bottom:5px;flex-wrap:wrap;">
@@ -574,12 +566,8 @@ const _PRELOADED_DATA = [];
     </div>
   </div>
 
-  <!-- FILA INFERIOR: TIPO NR POR PLAY + TIPO NR + CÓDIGO CIERRE -->
-  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 2fr;gap:7px;margin-bottom:7px;">
-    <div class="panel panel-flex">
-      <div class="ptitle">Actividades de: 1 — 2 — 3 Play no realizadas</div>
-      <div id="chart-play-nreal" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;flex:1;"></div>
-    </div>
+  <!-- FILA INFERIOR: TIPO NR + CÓDIGO CIERRE -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:7px;margin-bottom:7px;">
     <div class="panel panel-flex">
       <div class="ptitle" style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
         <span>Tipo actividad — no realizadas</span>
@@ -1011,78 +999,6 @@ function renderDashboard(data, filename) {
     </div>`;
   }).join('') || '<div style="color:#555555;font-size:12px;padding:8px 0;">Sin datos</div>';
 
-  // ── ANILLOS ──────────────────────────────────────────────
-  Object.keys(window._charts||{}).filter(k=>k.startsWith('ring-')).forEach(k=>{
-    window._charts[k].destroy(); delete window._charts[k];
-  });
-  if (!window._charts) window._charts = {};
-
-  const tipoFranjaMap = {};
-  dataActiva.forEach(r => {
-    const t = r['Tipo de Actividad'] || 'Otros';
-    if (!tipoFranjaMap[t]) tipoFranjaMap[t] = { comp:0, nreal:0, canc:0, total:0 };
-    tipoFranjaMap[t].total++;
-    if (r['Estado']==='Completado')    tipoFranjaMap[t].comp++;
-    else if (r['Estado']==='No Realizada') tipoFranjaMap[t].nreal++;
-    else if (r['Estado']==='Cancelado')    tipoFranjaMap[t].canc++;
-  });
-  const TIPOS_PERMITIDOS = ['alta','altas','alta traslado','altas traslado','migración','migracion','migraciones','reparación','reparacion','reparaciones'];
-  const tipoEntries = Object.entries(tipoFranjaMap)
-    .filter(([t]) => TIPOS_PERMITIDOS.some(p => t.toLowerCase().includes(p.split(' ')[0])))
-    .sort((a,b)=>b[1].total-a[1].total);
-  const ringAccents = ['#1d4ed8','#0891b2','#6366f1','#2563eb','#0369a1','#4a7ab5'];
-  const ringsWrap = document.getElementById('rings-wrap');
-  ringsWrap.innerHTML = '';
-
-  tipoEntries.forEach(([tipo, t], i) => {
-    const accent = ringAccents[i % ringAccents.length];
-    const pctComp  = t.total ? Math.round(t.comp  / t.total * 100) : 0;
-    const pctNreal = t.total ? Math.round(t.nreal / t.total * 100) : 0;
-    const pctCanc  = t.total ? Math.round(t.canc  / t.total * 100) : 0;
-    const resto    = t.total - t.comp - t.nreal - t.canc;
-    const id = 'ring-' + i;
-    const div = document.createElement('div');
-    div.className = 'ring-item';
-    div.innerHTML = `
-      <div class="ring-canvas-wrap">
-        <canvas id="${id}" width="80" height="80" style="width:80px;height:80px;"></canvas>
-        <div class="ring-center">
-          <div class="ring-center-val" style="color:${accent};">${t.total}</div>
-          <div class="ring-center-lbl">OT</div>
-        </div>
-      </div>
-      <div class="ring-tipo">${tipo}</div>
-      <div class="ring-stats">
-        <span style="color:#059669;">${t.comp} <small>${pctComp}%</small></span>
-        <span style="color:#dc2626;">${t.nreal} <small>${pctNreal}%</small></span>
-        <span style="color:#d97706;">${t.canc} <small>${pctCanc}%</small></span>
-      </div>`;
-    ringsWrap.appendChild(div);
-    window._charts[id] = new Chart(document.getElementById(id), {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [t.comp, t.nreal, t.canc, Math.max(resto,0)],
-          backgroundColor: ['rgba(34,197,94,0.70)','rgba(239,68,68,0.70)','rgba(245,158,11,0.70)','rgba(219,234,254,0.15)'],
-          borderWidth: 2, borderColor: '#fff', hoverOffset: 4
-        }],
-        labels: ['Completadas','No realizadas','Canceladas','Otros']
-      },
-      options: {
-        responsive: false, maintainAspectRatio: false, cutout: '66%',
-        plugins: {
-          legend: { display: false },
-          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} (${t.total ? Math.round(ctx.parsed/t.total*100) : 0}%)` } }
-        },
-        animation: { duration: 500 }
-      }
-    });
-  });
-
-  if (!tipoEntries.length) {
-    ringsWrap.innerHTML = '<div style="color:#555555;font-size:12px;padding:12px;">Sin datos</div>';
-  }
-
   // ── CÓDIGO DE CIERRE ─────────────────────────────────────
   const codMap = {};
   dataActiva.forEach(r => {
@@ -1125,103 +1041,11 @@ function renderDashboard(data, filename) {
   buildMarcasChart(dataActiva);
   buildTipoNrealChart(dataActiva);
   buildTipoCancChart(dataActiva);
-  buildPlayChart(dataActiva);
-  buildPlayNrealChart(dataActiva);
 
   if (!window._tendenciaBuilt) {
     buildTendencia();
     window._tendenciaBuilt = true;
   }
-}
-
-function buildPlayChart(dataActiva) {
-  if (window._playChart) { window._playChart = null; }
-  const completadas = dataActiva.filter(r => r['Estado'] === 'Completado');
-  const wrap = document.getElementById('chart-play');
-  if (!wrap) return;
-  if (!completadas.length) {
-    wrap.innerHTML = '<div style="color:var(--text-3);font-size:11px;padding:8px 0;">Sin completadas</div>';
-    return;
-  }
-
-  const tiposPlay = ['Alta', 'Alta Traslado', 'Migración'];
-  const plays = ['1 Play', '2 Play', '3 Play'];
-  const playStyles = [
-    { bg:'rgba(22,163,74,0.08)', border:'rgba(22,163,74,0.22)', col:'#16a34a', topBorder:'rgba(22,163,74,0.15)' },
-    { bg:'rgba(79,70,229,0.08)',  border:'rgba(79,70,229,0.22)',  col:'#4f46e5', topBorder:'rgba(79,70,229,0.15)' },
-    { bg:'rgba(217,119,6,0.08)',  border:'rgba(217,119,6,0.22)',  col:'#d97706', topBorder:'rgba(217,119,6,0.15)' }
-  ];
-
-  const playMap = {};
-  tiposPlay.forEach(t => { playMap[t] = {}; plays.forEach(p => playMap[t][p] = 0); });
-  completadas.filter(r => tiposPlay.includes(r['Tipo de Actividad'])).forEach(r => {
-    const t = r['Tipo de Actividad'];
-    const p = r['123 PLAY'] || r['Play'] || '';
-    if (playMap[t] && playMap[t][p] !== undefined) playMap[t][p]++;
-  });
-
-  const playTotals = plays.map(p => tiposPlay.reduce((s,t) => s + (playMap[t][p]||0), 0));
-
-  wrap.innerHTML = plays.map((p, pi) => {
-    const s = playStyles[pi];
-    const rows = tiposPlay.map(t => {
-      const v = playMap[t][p];
-      return `<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;">
-        <span style="color:var(--text-2);">${t}</span>
-        <span style="font-weight:700;color:${v ? 'var(--text)' : 'var(--text-3)'};">${v || '—'}</span>
-      </div>`;
-    }).join('');
-    return `<div style="background:${s.bg};border:1px solid ${s.border};border-radius:8px;padding:8px;display:flex;flex-direction:column;">
-      <div style="font-size:11px;font-weight:700;color:${s.col};text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;text-align:center;">${p}</div>
-      <div style="text-align:center;font-size:30px;font-weight:700;color:${s.col};line-height:1;margin-bottom:6px;">${playTotals[pi]}</div>
-      <div style="border-top:1px solid ${s.topBorder};padding-top:5px;flex:1;">${rows}</div>
-    </div>`;
-  }).join('');
-}
-
-function buildPlayNrealChart(dataActiva) {
-  const nreales = dataActiva.filter(r => r['Estado'] === 'No Realizada');
-  const wrap = document.getElementById('chart-play-nreal');
-  if (!wrap) return;
-
-  if (!nreales.length) {
-    wrap.innerHTML = '<div style="color:var(--text-3);font-size:11px;padding:8px 0;">Sin no realizadas</div>';
-    return;
-  }
-
-  const tiposPlay = ['Alta', 'Alta Traslado', 'Migración'];
-  const plays = ['1 Play', '2 Play', '3 Play'];
-  const playStyles = [
-    { bg:'rgba(239,68,68,0.08)',  border:'rgba(239,68,68,0.22)',  col:'#fc8181', topBorder:'rgba(239,68,68,0.15)' },
-    { bg:'rgba(239,68,68,0.06)',  border:'rgba(239,68,68,0.18)',  col:'#f87171', topBorder:'rgba(239,68,68,0.12)' },
-    { bg:'rgba(239,68,68,0.05)',  border:'rgba(239,68,68,0.15)',  col:'#fca5a5', topBorder:'rgba(239,68,68,0.10)' }
-  ];
-
-  const playMap = {};
-  tiposPlay.forEach(t => { playMap[t] = {}; plays.forEach(p => playMap[t][p] = 0); });
-  nreales.filter(r => tiposPlay.includes(r['Tipo de Actividad'])).forEach(r => {
-    const t = r['Tipo de Actividad'];
-    const p = r['123 PLAY'] || r['Play'] || '';
-    if (playMap[t] && playMap[t][p] !== undefined) playMap[t][p]++;
-  });
-
-  const playTotals = plays.map(p => tiposPlay.reduce((s,t) => s + (playMap[t][p]||0), 0));
-
-  wrap.innerHTML = plays.map((p, pi) => {
-    const s = playStyles[pi];
-    const rows = tiposPlay.map(t => {
-      const v = playMap[t][p];
-      return `<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;">
-        <span style="color:var(--text-2);">${t}</span>
-        <span style="font-weight:700;color:${v ? 'var(--text)' : 'var(--text-3)'};">${v || '—'}</span>
-      </div>`;
-    }).join('');
-    return `<div style="background:${s.bg};border:1px solid ${s.border};border-radius:8px;padding:8px;display:flex;flex-direction:column;">
-      <div style="font-size:11px;font-weight:700;color:${s.col};text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;text-align:center;">${p}</div>
-      <div style="text-align:center;font-size:30px;font-weight:700;color:${s.col};line-height:1;margin-bottom:6px;">${playTotals[pi]}</div>
-      <div style="border-top:1px solid ${s.topBorder};padding-top:5px;flex:1;">${rows}</div>
-    </div>`;
-  }).join('');
 }
 
 function buildMarcasChart(dataActiva) {
