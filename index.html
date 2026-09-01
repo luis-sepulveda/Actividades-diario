@@ -492,6 +492,12 @@ const _PRELOADED_DATA = [];
     </div>
   </div>
 
+  <!-- FILTRO POR MES -->
+  <div class="date-filter" id="mes-filter" style="display:none;">
+    <label>&#128197; Mes:</label>
+    <div id="mes-btns" style="display:flex;gap:6px;flex-wrap:wrap;"></div>
+  </div>
+
   <!-- FILTRO POR FECHA -->
   <div class="date-filter" id="date-filter" style="display:none;">
     <label>📅 Fecha:</label>
@@ -626,6 +632,7 @@ const fileInput = document.getElementById('fileInput');
 let allData = [];
 let currentFilename = '';
 let currentFecha = null;
+let currentMes = null;
 let currentSupervisor = null;
 let currentMarca = null;
 let currentCiudad = null;
@@ -682,6 +689,8 @@ function processFile(file) {
     currentCiudad = null;
     currentRegion = null;
     window._tendenciaBuilt = false;
+    currentMes = null;
+    buildMesFilter(data);
     buildDateFilter(data);
     renderDashboard(data, file.name);
     dropzone.style.transition = 'all 0.4s ease';
@@ -722,6 +731,31 @@ function normFecha(val) {
   return s;
 }
 
+// -- Helpers de mes (para el filtro por mes) --
+function mesDeFecha(val) {
+  const f = normFecha(val);
+  if (!f) return null;
+  const p = String(f).split("/");
+  return p.length === 3 ? p[1] + "/" + p[2] : null;
+}
+function _ordFecha(f) {
+  const p = String(f).split("/");
+  return p.length === 3 ? p[2] + p[1] + p[0] : String(f);
+}
+function _ordMes(m) {
+  const p = String(m).split("/");
+  return p.length === 2 ? p[1] + p[0] : String(m);
+}
+const _NOMBRES_MES = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+function etiquetaMes(m) {
+  const p = String(m).split("/");
+  if (p.length !== 2) return String(m);
+  return (_NOMBRES_MES[parseInt(p[0], 10) - 1] || p[0]) + " " + p[1];
+}
+function dataDelMes() {
+  return currentMes ? allData.filter(r => mesDeFecha(r["Fecha"]) === currentMes) : allData;
+}
+
 function getSup(r) {
   return r['supervisor'] || r['Supervisor'] || r['SUPERVISOR'] || null;
 }
@@ -758,6 +792,7 @@ function filtMCLabel() {
 
 function getActiveData() {
   let d = allData;
+  if (currentMes)        d = d.filter(r => mesDeFecha(r['Fecha']) === currentMes);
   if (currentFecha)      d = d.filter(r => normFecha(r['Fecha']) === currentFecha);
   if (currentSupervisor) d = d.filter(r => getSup(r) === currentSupervisor);
   if (currentMarca)      d = d.filter(r => getMarca(r) === currentMarca);
@@ -787,10 +822,38 @@ function buildSupFilter(data) {
   });
 }
 
+function buildMesFilter(data) {
+  const mesesSet = new Set();
+  data.forEach(r => { const m = mesDeFecha(r["Fecha"]); if (m) mesesSet.add(m); });
+  const meses = [...mesesSet].sort((a, b) => _ordMes(a).localeCompare(_ordMes(b)));
+  const container = document.getElementById("mes-filter");
+  const btns = document.getElementById("mes-btns");
+  if (!container || !btns) return;
+  if (meses.length <= 1) { container.style.display = "none"; currentMes = null; return; }
+  container.style.display = "flex";
+  let html = `<button class="date-btn all active" data-mes="all">Todos (${meses.length} meses)</button>`;
+  meses.forEach(m => { html += `<button class="date-btn" data-mes="${m}">${etiquetaMes(m)}</button>`; });
+  btns.innerHTML = html;
+  btns.querySelectorAll(".date-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      btns.querySelectorAll(".date-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const val = btn.dataset.mes;
+      currentMes = val === "all" ? null : val;
+      currentFecha = null;
+      buildDateFilter(allData);
+      const dc = document.getElementById("date-count");
+      if (dc) dc.textContent = "";
+      window._tendenciaBuilt = false;
+      renderDashboard(getActiveData(), currentFilename);
+    });
+  });
+}
+
 function buildDateFilter(data) {
   const fechasSet = new Set();
-  data.forEach(r => { const f = normFecha(r['Fecha']); if (f) fechasSet.add(f); });
-  const fechas = [...fechasSet].sort();
+  data.forEach(r => { if (currentMes && mesDeFecha(r['Fecha']) !== currentMes) return; const f = normFecha(r['Fecha']); if (f) fechasSet.add(f); });
+  const fechas = [...fechasSet].sort((a, b) => _ordFecha(a).localeCompare(_ordFecha(b)));
   const container = document.getElementById('date-filter');
   const btns = document.getElementById('date-btns');
   if (fechas.length <= 1) { container.style.display = 'none'; return; }
@@ -1206,7 +1269,7 @@ function buildNrealChart(dataActiva) {
 }
 
 function buildTendencia() {
-  const dataParaTend = allData.filter(r => r['Estado'] !== 'Suspendido');
+  const dataParaTend = dataDelMes().filter(r => r['Estado'] !== 'Suspendido');
   const fechaMap = {};
   dataParaTend.forEach(r => {
     const f = normFecha(r['Fecha']);
@@ -1216,7 +1279,7 @@ function buildTendencia() {
     if (r['Estado'] === 'No Realizada')  fechaMap[f].nreal++;
     if (r['Estado'] === 'Cancelado')     fechaMap[f].canc++;
   });
-  const fechas = Object.keys(fechaMap).sort();
+  const fechas = Object.keys(fechaMap).sort((a, b) => _ordFecha(a).localeCompare(_ordFecha(b)));
 
   if (window._tendenciaChart) { window._tendenciaChart.destroy(); window._tendenciaChart = null; }
 
@@ -1302,6 +1365,8 @@ window.addEventListener('DOMContentLoaded', () => {
     currentFilename = 'dashboard_operacional_cargar.xlsx';
     currentFecha = null;
     window._tendenciaBuilt = false;
+    currentMes = null;
+    buildMesFilter(allData);
     buildDateFilter(allData);
     renderDashboard(allData, currentFilename);
     const dz = document.getElementById('dropzone');
@@ -1321,6 +1386,8 @@ window.addEventListener('DOMContentLoaded', () => {
       currentFilename = 'datos.csv';
       currentFecha = null;
       window._tendenciaBuilt = false;
+      currentMes = null;
+      buildMesFilter(PRELOADED);
       buildDateFilter(PRELOADED);
       renderDashboard(PRELOADED, currentFilename);
       const dz = document.getElementById('dropzone');
@@ -1350,6 +1417,8 @@ window.addEventListener('DOMContentLoaded', () => {
             currentFilename = file.name;
             currentFecha = null;
             window._tendenciaBuilt = false;
+            currentMes = null;
+            buildMesFilter(data);
             buildDateFilter(data);
             renderDashboard(data, file.name);
             document.getElementById('drop-indicator').remove();
@@ -1467,7 +1536,7 @@ document.addEventListener('drop', () => document.body.classList.remove('dragging
   window.openNrealCiudadFranjaModal = function() {
     const dataActiva = (currentFecha
       ? allData.filter(r => normFecha(r['Fecha']) === currentFecha)
-      : allData
+      : dataDelMes()
     ).filter(r => r['Estado'] !== 'Suspendido' && (!currentSupervisor || getSup(r) === currentSupervisor) && (!currentMarca || getMarca(r) === currentMarca) && (!currentCiudad || getCiudad(r) === currentCiudad) && (!currentRegion || getRegion(r) === currentRegion));
 
     const nreales = dataActiva.filter(r => r['Estado'] === 'No Realizada');
@@ -1595,7 +1664,7 @@ document.addEventListener('drop', () => document.body.classList.remove('dragging
 
     // ── Gráfico: acumulado semanal de "Sin moradores" por técnico ──
     // Barras horizontales apiladas (un segmento por semana). Respeta supervisor; usa todas las fechas.
-    const smBase = allData.filter(r =>
+    const smBase = dataDelMes().filter(r =>
       r['Estado'] !== 'Suspendido' &&
       r['Código de Cierre'] === 'Sin moradores' &&
       (!currentSupervisor || getSup(r) === currentSupervisor) &&
@@ -1634,7 +1703,7 @@ document.addEventListener('drop', () => document.body.classList.remove('dragging
     // Sirven de denominador para el % de "sin moradores" sobre la carga asignada, calculado SEMANA a SEMANA.
     const tecAsignadas = {};       // tec -> total asignadas (todas las semanas)
     const tecSemAsignadas = {};    // tec -> { semKey -> asignadas de esa semana }
-    allData.forEach(r => {
+    dataDelMes().forEach(r => {
       if (r['Estado'] === 'Suspendido') return;
       if (currentSupervisor && getSup(r) !== currentSupervisor) return;
       if (currentRegion && getRegion(r) !== currentRegion) return;
@@ -1848,7 +1917,7 @@ document.addEventListener('drop', () => document.body.classList.remove('dragging
   window.openCodCierreFranjaModal = function() {
     const dataActiva = (currentFecha
       ? allData.filter(r => normFecha(r['Fecha']) === currentFecha)
-      : allData
+      : dataDelMes()
     ).filter(r => r['Estado'] !== 'Suspendido' && (!currentSupervisor || getSup(r) === currentSupervisor) && (!currentMarca || getMarca(r) === currentMarca) && (!currentCiudad || getCiudad(r) === currentCiudad) && (!currentRegion || getRegion(r) === currentRegion));
 
     const nreales = dataActiva.filter(r => r['Estado'] === 'No Realizada');
@@ -1993,7 +2062,7 @@ document.addEventListener('drop', () => document.body.classList.remove('dragging
     // Barras horizontales apiladas (un segmento por día). Respeta supervisor.
     // Si hay filtro de fecha activo, muestra solo el total por técnico (sin desglose diario).
     const soloTotalSmd = !!currentFecha;
-    const smdBase = allData.filter(r =>
+    const smdBase = dataDelMes().filter(r =>
       r['Estado'] !== 'Suspendido' &&
       r['Código de Cierre'] === 'Sin moradores' &&
       (!currentSupervisor || getSup(r) === currentSupervisor) &&
@@ -2209,7 +2278,7 @@ document.addEventListener('drop', () => document.body.classList.remove('dragging
     // Respetar filtros activos de fecha y supervisor
     const dataActiva = (currentFecha
       ? allData.filter(r => normFecha(r['Fecha']) === currentFecha)
-      : allData
+      : dataDelMes()
     ).filter(r => r['Estado'] !== 'Suspendido' && (!currentSupervisor || getSup(r) === currentSupervisor) && (!currentMarca || getMarca(r) === currentMarca) && (!currentCiudad || getCiudad(r) === currentCiudad) && (!currentRegion || getRegion(r) === currentRegion));
 
     const completadas = dataActiva.filter(r => r['Estado'] === 'Completado');
