@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operación en pantalla — VTR/CLARO</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   PANTALLA DE OPERACION
+   Pensada para dejarla puesta en un monitor aparte, no para
+   trabajar con ella. Por eso: fondo oscuro, pocos numeros y
+   letra grande, que se lea de lejos. Sin filtros ni botones.
+   Se refresca sola cada 5 minutos.
+   Lee los mismos archivos que el dashboard: datos.json (al lado)
+   e historico_dias.json (del repo de rutas).
+   ============================================================ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --fondo:#0b0f14; --azulejo:#141b23; --azulejo2:#1a222c;
+  --linea:rgba(255,255,255,.07);
+  --texto:#e8eef5; --tenue:#8fa0b3; --debil:#5d6d7e;
+  --ok:#34d399; --mal:#f87171; --ojo:#fbbf24; --frio:#60a5fa;
+}
+body{background:var(--fondo);color:var(--texto);font-family:'DM Sans',system-ui,sans-serif;
+     padding:22px 26px;min-height:100vh}
+
+.top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px}
+.top h1{font-size:23px;font-weight:700;letter-spacing:-.3px}
+.top .sub{font-size:14px;color:var(--tenue);margin-top:2px}
+.top .reloj{text-align:right}
+.top .hora{font-size:30px;font-weight:700;line-height:1}
+.top .dia{font-size:13px;color:var(--tenue);margin-top:3px}
+
+/* bento: el tamano del azulejo lo decide la importancia del dato */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.az{background:var(--azulejo);border:1px solid var(--linea);border-radius:16px;padding:20px 22px}
+.az .rot{font-size:13px;color:var(--tenue);letter-spacing:.3px;margin-bottom:10px}
+.g2{grid-column:span 2}
+.g4{grid-column:span 4}
+
+.hero{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap}
+.hero .n{font-size:86px;font-weight:700;line-height:.9;letter-spacing:-3px}
+.hero .delta{font-size:20px;font-weight:700;padding-bottom:9px}
+.hero .pie{font-size:15px;color:var(--tenue);padding-bottom:11px}
+
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:4px}
+.trio .n{font-size:40px;font-weight:700;line-height:1}
+.trio .l{font-size:13px;color:var(--tenue);margin-top:3px}
+
+.medidor{margin-top:6px}
+.medidor .barra{height:26px;background:var(--azulejo2);border-radius:8px;position:relative;overflow:hidden}
+.medidor .relleno{height:100%;background:var(--ok);border-radius:8px}
+.medidor .tope{position:absolute;top:-3px;bottom:-3px;left:50%;border-left:3px dashed var(--mal)}
+.medidor .pie{display:flex;justify-content:space-between;font-size:12px;color:var(--debil);margin-top:6px}
+
+.lista .fila{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid var(--linea)}
+.lista .fila:last-child{border-bottom:0}
+.lista .ic{font-size:19px;font-weight:700;width:16px}
+.lista .txt{flex:1;font-size:16px}
+.lista .val{font-size:17px;font-weight:700}
+.sube{color:var(--ok)} .baja{color:var(--mal)} .igual{color:var(--debil)}
+
+.dias{display:flex;gap:5px;align-items:flex-end;height:90px;margin-top:4px}
+.dias .col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:5px}
+.dias .b{width:100%;border-radius:4px 4px 0 0;background:var(--frio)}
+.dias .e{font-size:11px;color:var(--debil)}
+
+.chips{display:flex;gap:26px;flex-wrap:wrap}
+.chips .c .n{font-size:32px;font-weight:700;line-height:1}
+.chips .c .l{font-size:12px;color:var(--tenue);margin-top:3px}
+
+.aviso{font-size:13px;color:var(--debil);margin-top:14px;text-align:right}
+@media (max-width:1100px){ .bento{grid-template-columns:repeat(2,1fr)} .g4{grid-column:span 2} }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div>
+    <h1>Operación VTR / CLARO</h1>
+    <div class="sub" id="sub">Región de Valparaíso</div>
+  </div>
+  <div class="reloj">
+    <div class="hora" id="hora">--:--</div>
+    <div class="dia" id="dia">—</div>
+  </div>
+</div>
+
+<div class="bento" id="bento"></div>
+<div class="aviso" id="aviso"></div>
+
+<script>
+const TOPE_SM = 50;
+const REFRESCO = 5 * 60 * 1000;
+
+function n1(x){ return x.toFixed(1).replace('.', ','); }
+function esc(s){ return String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
+
+function expandir(j){
+  const dic = j.dic || {};
+  return j.rows.map(r => {
+    const o = {};
+    j.cols.forEach((c, i) => { o[c] = dic[c] ? dic[c][r[i]] : r[i]; });
+    return o;
+  });
+}
+function aFecha(s){
+  if(!s) return null;
+  const p = String(s).split('-');
+  if(p.length !== 3) return null;
+  return new Date(+p[2], +p[1]-1, +p[0]);
+}
+function lunesDe(d){
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  x.setDate(x.getDate() - ((x.getDay()+6)%7));
+  return x;
+}
+function clave(d){
+  const z = v => String(v).padStart(2,'0');
+  return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate());
+}
+function efec(l){ return l.length ? 100*l.filter(r=>r['Estado']==='Completado').length/l.length : 0; }
+
+async function cargar(){
+  let filas = [], rutas = {};
+  try{
+    const r = await fetch('datos.json?t='+Date.now(), {cache:'no-store'});
+    filas = expandir(await r.json());
+  }catch(e){ document.getElementById('bento').innerHTML =
+    '<div class="az g4"><div class="rot">Sin datos</div>No se pudo cargar datos.json.</div>'; return; }
+  try{
+    const r = await fetch('https://raw.githubusercontent.com/luis-sepulveda/Rutas-tecnicos/data/historico_dias.json?t='+Date.now(), {cache:'no-store'});
+    rutas = (await r.json()).dias || {};
+  }catch(e){ rutas = {}; }
+  pintar(filas, rutas);
+}
+
+function pintar(filas, rutas){
+  filas.forEach(r => r._f = aFecha(r['Fecha']));
+  filas = filas.filter(r => r._f);
+
+  /* --- ultimo dia con datos --- */
+  const dias = [...new Set(filas.map(r => clave(r._f)))].sort();
+  const hoyK = dias[dias.length-1];
+  const hoy = filas.filter(r => clave(r._f) === hoyK);
+
+  /* --- semana en curso vs anterior (lunes a sabado) --- */
+  const porSem = {};
+  filas.forEach(r => { if(r._f.getDay()===0) return;
+    const k = clave(lunesDe(r._f)); (porSem[k] = porSem[k]||[]).push(r); });
+  const sems = Object.keys(porSem).sort();
+  const B = porSem[sems[sems.length-1]] || [], A = porSem[sems[sems.length-2]] || [];
+  const efB = efec(B), efA = A.length ? efec(A) : null;
+  const dif = efA === null ? null : efB - efA;
+
+  /* --- sin moradores de la semana --- */
+  const sm = B.filter(r => r['Código de Cierre'] === 'Sin moradores').length;
+  const smPct = B.length ? 100*sm/B.length : 0;
+
+  /* --- que se movio, por tipo de actividad --- */
+  const movs = [];
+  if(A.length){
+    [...new Set(B.map(r => r['Tipo de Actividad']))].forEach(t => {
+      const a = A.filter(r => r['Tipo de Actividad']===t), b = B.filter(r => r['Tipo de Actividad']===t);
+      if(a.length < 25 || b.length < 25) return;
+      const d = efec(b) - efec(a);
+      if(Math.abs(d) >= 5) movs.push({t, d});
+    });
+    movs.sort((x,y) => x.d - y.d);
+  }
+
+  /* --- ultimos 10 dias --- */
+  const ult = dias.slice(-10).map(k => {
+    const l = filas.filter(r => clave(r._f)===k);
+    return {k, ef: efec(l), n: l.length};
+  });
+  const maxEf = Math.max(...ult.map(d => d.ef), 1);
+
+  const rd = rutas[hoyK.split('-').reverse().join('-')] || null;
+
+  const est = e => hoy.filter(r => r['Estado']===e).length;
+  const colorDif = dif === null ? 'var(--debil)' : (dif > 0 ? 'var(--ok)' : (dif < 0 ? 'var(--mal)' : 'var(--debil)'));
+
+  let movHTML = '';
+  if(!movs.length){
+    movHTML = '<div class="fila"><span class="ic igual">=</span><span class="txt">Semana pareja, nada se movió más de 5 puntos</span></div>';
+  } else {
+    movs.slice(0,3).forEach(m => {
+      const baja = m.d < 0;
+      movHTML += '<div class="fila"><span class="ic '+(baja?'baja':'sube')+'">'+(baja?'\u2193':'\u2191')+'</span>'
+        + '<span class="txt">'+esc(m.t)+'</span>'
+        + '<span class="val '+(baja?'baja':'sube')+'">'+(baja?'':'+')+n1(m.d)+'</span></div>';
+    });
+  }
+
+  let barras = '';
+  ult.forEach(d => {
+    const alto = Math.max(6, Math.round(d.ef/maxEf*74));
+    const col = d.ef >= 70 ? 'var(--ok)' : (d.ef >= 60 ? 'var(--frio)' : 'var(--mal)');
+    barras += '<div class="col"><div class="b" style="height:'+alto+'px;background:'+col+'"></div>'
+            + '<div class="e">'+d.k.slice(8,10)+'</div></div>';
+  });
+
+  document.getElementById('bento').innerHTML = `
+    <div class="az g2">
+      <div class="rot">Efectividad de la semana</div>
+      <div class="hero">
+        <span class="n">${n1(efB)}<span style="font-size:38px">%</span></span>
+        <span class="delta" style="color:${colorDif}">${dif===null?'':(dif>0?'+':'')+n1(dif)+' pts'}</span>
+        <span class="pie">${B.length} actividades</span>
+      </div>
+    </div>
+
+    <div class="az g2">
+      <div class="rot">Último día cargado · ${hoyK.split('-').reverse().join('-')}</div>
+      <div class="trio">
+        <div><div class="n" style="color:var(--ok)">${est('Completado')}</div><div class="l">completadas</div></div>
+        <div><div class="n" style="color:var(--mal)">${est('No Realizada')}</div><div class="l">no realizadas</div></div>
+        <div><div class="n" style="color:var(--ojo)">${est('Cancelado')}</div><div class="l">canceladas</div></div>
+      </div>
+    </div>
+
+    <div class="az g2">
+      <div class="rot">Sin moradores de la semana · tope ${TOPE_SM}%</div>
+      <div class="medidor">
+        <div class="barra">
+          <div class="relleno" style="width:${Math.min(smPct,100)}%;background:${smPct>TOPE_SM?'var(--mal)':'var(--ok)'}"></div>
+          <div class="tope"></div>
+        </div>
+        <div class="pie"><span>${sm} de ${B.length} · ${n1(smPct)}%</span><span>tope ${TOPE_SM}%</span></div>
+      </div>
+    </div>
+
+    <div class="az g2">
+      <div class="rot">Qué se movió contra la semana anterior</div>
+      <div class="lista">${movHTML}</div>
+    </div>
+
+    <div class="az g2">
+      <div class="rot">Últimos ${ult.length} días · efectividad</div>
+      <div class="dias">${barras}</div>
+    </div>
+
+    <div class="az g2">
+      <div class="rot">Monitor de rutas${rd ? ' · corte '+rd.hasta : ''}</div>
+      ${rd ? `<div class="chips">
+        <div class="c"><div class="n" style="color:${rd.caidas_activas?'var(--mal)':'var(--ok)'}">${rd.caidas_activas}</div><div class="l">caídas sin resolver</div></div>
+        <div class="c"><div class="n">${rd.nuevas}</div><div class="l">órdenes nuevas</div></div>
+        <div class="c"><div class="n">${rd.repetidas}</div><div class="l">repetidas</div></div>
+        <div class="c"><div class="n">${rd.reagendadas}</div><div class="l">reagendadas</div></div>
+      </div>` : '<div class="l" style="color:var(--debil);font-size:15px">Sin registro del monitor para este día.</div>'}
+    </div>`;
+
+  const ahora = new Date();
+  document.getElementById('hora').textContent =
+    String(ahora.getHours()).padStart(2,'0')+':'+String(ahora.getMinutes()).padStart(2,'0');
+  document.getElementById('dia').textContent =
+    ahora.toLocaleDateString('es-CL', {weekday:'long', day:'numeric', month:'long'});
+  document.getElementById('aviso').textContent = 'Se actualiza sola cada 5 minutos';
+}
+
+cargar();
+setInterval(cargar, REFRESCO);
+setInterval(() => {
+  const a = new Date();
+  document.getElementById('hora').textContent =
+    String(a.getHours()).padStart(2,'0')+':'+String(a.getMinutes()).padStart(2,'0');
+}, 30000);
+</script>
+</body>
+</html>
