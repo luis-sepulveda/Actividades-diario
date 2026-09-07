@@ -19,6 +19,7 @@
   --linea:#dbe3ec; --linea2:#b9c6d4;
   --ink:#16232f; --tenue:#5f7386; --debil:#93a3b4;
   --ok:#0f766e; --mal:#be123c; --ojo:#b45309; --frio:#4f46e5; --gris:#64748b;
+  --amarillo:#facc15; --amarillo2:#a16207;
   --relieve:0 1px 2px rgba(20,45,70,.06);
 }
 body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;
@@ -91,6 +92,12 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .lin .vl{width:52px;text-align:right;font-size:13px;font-weight:700}
 .lin .pc{width:48px;text-align:right;font-size:12px;color:var(--debil)}
 .vacio{font-size:13px;color:var(--debil);padding:10px 0}
+.lin.abrir{cursor:pointer}
+.lin.abrir:hover .nm{color:var(--ink)}
+.lin.abrir .nm::after{content:' ▾';font-size:10px}
+.lin.abrir.abierta .nm::after{content:' ▴'}
+.lin.hija{padding-left:16px;border-bottom:1px dashed var(--linea)}
+.lin.hija .nm{width:164px;font-size:12.5px;color:var(--tenue)}
 
 .rutas{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:10px}
 .rutas .r{background:var(--panel2);border-radius:9px;padding:9px 11px}
@@ -239,7 +246,9 @@ function verMes(){
      + barras(sel, categoria) + '</div>';
 
   if(estSel === 'No Realizada' || estSel === 'Cancelado'){
-    h += '<div class="caja"><h2>Motivo de cierre</h2>' + barras(sel, 'Código de Cierre', 8) + '</div>';
+    h += '<div class="caja"><h2>Motivo de cierre'
+       + '<span class="chico">las más relevantes</span></h2>'
+       + barras(sel, 'Código de Cierre', null, true) + '</div>';
   } else {
     h += '<div class="caja"><h2>Por ciudad</h2>' + barras(sel, 'Ciudad', 6) + '</div>';
   }
@@ -256,6 +265,13 @@ function verMes(){
 
   document.getElementById('vista').innerHTML = h;
   document.getElementById('volver').addEventListener('click', portada);
+  document.querySelectorAll('.lin.abrir').forEach(f =>
+    f.addEventListener('click', () => {
+      const caja = document.getElementById(f.dataset.abre);
+      const abierta = caja.style.display !== 'none';
+      caja.style.display = abierta ? 'none' : 'block';
+      f.classList.toggle('abierta', !abierta);
+    }));
   document.querySelectorAll('.chip[data-d]').forEach(b =>
     b.addEventListener('click', () => { diaSel = b.dataset.d || null; verMes(); }));
   document.querySelectorAll('.est').forEach(b =>
@@ -263,28 +279,60 @@ function verMes(){
   window.scrollTo(0,0);
 }
 
-function barras(lista, campo, tope){
+/* Motivos que siempre se muestran aunque tengan pocas ordenes: son los que
+   se miran si o si. La falta de dotacion ademas sale en amarillo, porque no
+   es una falla del tecnico sino que no hubo quien la tomara. */
+const CIERRES_CLAVE = ['sin moradores','cliente reagenda','cliente desiste','dotaci'];
+/* Un motivo entra si pesa al menos este porcentaje del total. Con 5 salian
+   17 filas y eso ya no es "lo relevante". Si quieres ver mas, baja el numero. */
+const MINIMO_CIERRE = 2;
+
+let _nOtras = 0;
+function barras(lista, campo, tope, relevantes){
   const col = (ESTADOS.find(e => e.k === estSel) || {}).c || 'var(--frio)';
   if(!lista.length) return '<div class="vacio">Sin órdenes en esta selección.</div>';
   const c = {};
   const sacar = typeof campo === 'function' ? campo : (r => r[campo]);
   lista.forEach(r => { const v = sacar(r) || 'Sin dato'; c[v] = (c[v]||0)+1; });
   let pares = Object.entries(c).sort((a,b) => b[1]-a[1]);
-  const otras = tope && pares.length > tope ? pares.slice(tope) : [];
-  if(tope) pares = pares.slice(0, tope);
+  let otras = [];
+  if(relevantes){
+    /* se muestran los motivos con peso propio y los que siempre importan;
+       el resto se junta al final para no perder el total */
+    const vale = ([k,v]) => (100*v/lista.length) >= MINIMO_CIERRE ||
+      CIERRES_CLAVE.some(p => String(k).toLowerCase().indexOf(p) >= 0);
+    otras = pares.filter(x => !vale(x));
+    pares = pares.filter(vale);
+  } else if(tope && pares.length > tope){
+    otras = pares.slice(tope);
+    pares = pares.slice(0, tope);
+  }
+  if(!pares.length){ pares = otras; otras = []; }
   const max = pares[0][1];
   let h = '';
   pares.forEach(([k,v]) => {
-    h += '<div class="lin"><span class="nm">'+esc(k)+'</span>'
-      + '<div class="pista"><span style="width:'+(100*v/max)+'%;background:'+col+'"></span></div>'
+    const dotacion = String(k).toLowerCase().indexOf('dotaci') >= 0;
+    h += '<div class="lin"><span class="nm"'
+      + (dotacion ? ' style="color:var(--amarillo2);font-weight:700"' : '')+'>'+esc(k)+'</span>'
+      + '<div class="pista"><span style="width:'+(100*v/max)+'%;background:'
+      + (dotacion ? 'var(--amarillo)' : col)+'"></span></div>'
       + '<span class="vl">'+v.toLocaleString('es-CL')+'</span>'
       + '<span class="pc">'+pc(v,lista.length)+'</span></div>';
   });
   if(otras.length){
     const s = otras.reduce((a,b) => a+b[1], 0);
-    h += '<div class="lin"><span class="nm" style="color:var(--debil)">Otras '+otras.length+'</span>'
+    const id = 'otras'+(++_nOtras);
+    h += '<div class="lin abrir" data-abre="'+id+'">'
+      + '<span class="nm" style="color:var(--debil)">Otras '+otras.length+'</span>'
       + '<div class="pista"><span style="width:'+(100*s/max)+'%;background:var(--debil)"></span></div>'
-      + '<span class="vl">'+s+'</span><span class="pc">'+pc(s,lista.length)+'</span></div>';
+      + '<span class="vl">'+s+'</span><span class="pc">'+pc(s,lista.length)+'</span></div>'
+      + '<div id="'+id+'" style="display:none">';
+    otras.forEach(([k,v]) => {
+      h += '<div class="lin hija"><span class="nm">'+esc(k)+'</span>'
+        + '<div class="pista"><span style="width:'+(100*v/max)+'%;background:var(--debil)"></span></div>'
+        + '<span class="vl">'+v+'</span><span class="pc">'+pc(v,lista.length)+'</span></div>';
+    });
+    h += '</div>';
   }
   return h;
 }
