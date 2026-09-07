@@ -107,6 +107,19 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .rutas .r .n{font-size:20px;font-weight:700;line-height:1.1}
 .rutas .r .l{font-size:11px;color:var(--tenue);margin-top:2px}
 .rutas .r.caida .n{color:var(--mal-texto)}
+.rutas .r.abre{cursor:pointer;transition:.12s}
+.rutas .r.abre:hover{background:var(--linea)}
+.rutas .r.abre.on{background:var(--ink)}
+.rutas .r.abre.on .n,.rutas .r.abre.on .l{color:#fff}
+.rutas .r .ver{font-size:10px;color:var(--debil);margin-top:3px}
+.rutas .r.abre.on .ver{color:rgba(255,255,255,.7)}
+.tdet{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:14px}
+.tdet th{text-align:left;font-size:10px;letter-spacing:.7px;text-transform:uppercase;
+         color:var(--debil);font-weight:700;padding:6px 9px;border-bottom:1px solid var(--linea)}
+.tdet td{padding:7px 9px;border-bottom:1px solid var(--linea);vertical-align:top}
+.tdet tr:nth-child(even) td{background:var(--zebra)}
+.tdet .ot{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;white-space:nowrap}
+.tdet .dir{color:var(--tenue);font-size:12px}
 </style>
 </head>
 <body>
@@ -275,9 +288,14 @@ function verMes(){
       f.classList.toggle('abierta', !abierta);
     }));
   document.querySelectorAll('.chip[data-d]').forEach(b =>
-    b.addEventListener('click', () => { diaSel = b.dataset.d || null; verMes(); }));
+    b.addEventListener('click', () => { diaSel = b.dataset.d || null; grupoSel = null; verMes(); }));
   document.querySelectorAll('.est').forEach(b =>
     b.addEventListener('click', () => { estSel = b.dataset.e; verMes(); }));
+  document.querySelectorAll('.rutas .r.abre').forEach(b =>
+    b.addEventListener('click', () => {
+      grupoSel = (grupoSel === b.dataset.g) ? null : b.dataset.g;
+      verMes();
+    }));
   window.scrollTo(0,0);
 }
 
@@ -339,17 +357,68 @@ function barras(lista, campo, tope, relevantes){
   return h;
 }
 
+/* Grupos que se pueden abrir. La llave es la que guarda resumen_dia.py
+   dentro de 'detalle'. Los dias anteriores al cambio no traen detalle: ahi
+   los recuadros quedan como estaban, solo con el numero. */
+const GRUPOS_RUTAS = {caidas:'caídas', nuevas:'órdenes nuevas',
+                      repetidas:'repetidas', reagendadas:'reagendadas'};
+let grupoSel = null;
+
 function panelRutas(){
   if(!diaSel) return '<div class="vacio">Elige un día arriba para ver las caídas y las órdenes nuevas de esa jornada.</div>';
   const d = RUTAS[diaSel];
   if(!d) return '<div class="vacio">El monitor no tiene registro de este día. Empezó a guardar el 05-09-2026.</div>';
-  const r = (v,l,cl) => '<div class="r '+(cl||'')+'"><div class="n">'+(v??0)+'</div><div class="l">'+l+'</div></div>';
-  return '<div class="rutas">'
-    + r(d.caidas_total,'caídas','caida') + r(d.caidas_activas,'sin resolver','caida')
-    + r(d.caidas_resueltas,'resueltas') + r(d.nuevas,'órdenes nuevas')
-    + r(d.al_bucket,'al bucket') + r(d.repetidas,'repetidas')
-    + r(d.reagendadas,'reagendadas') + r(d.rgu,'RGU')
-    + '</div><div class="vacio">Corte de las '+d.hasta+' · '+d.actividades+' actividades · '+d.tecnicos+' técnicos</div>';
+  const det = d.detalle || {};
+
+  const r = (v, l, cl, g) => {
+    const lista = g ? (det[g] || null) : null;
+    const abre = lista && lista.length;
+    return '<div class="r '+(cl||'')+(abre ? ' abre' : '')+(grupoSel===g ? ' on' : '')+'"'
+      + (abre ? ' data-g="'+g+'"' : '')+'>'
+      + '<div class="n">'+(v ?? 0)+'</div><div class="l">'+l+'</div>'
+      + (abre ? '<div class="ver">ver detalle</div>' : '')+'</div>';
+  };
+
+  let h = '<div class="rutas">'
+    + r(d.caidas_total,'caídas','caida','caidas')
+    + r(d.caidas_activas,'sin resolver','caida')
+    + r(d.caidas_resueltas,'resueltas')
+    + r(d.nuevas,'órdenes nuevas',null,'nuevas')
+    + r(d.al_bucket,'al bucket')
+    + r(d.repetidas,'repetidas',null,'repetidas')
+    + r(d.reagendadas,'reagendadas',null,'reagendadas')
+    + r(d.rgu,'RGU')
+    + '</div>';
+
+  if(grupoSel && (det[grupoSel] || []).length){
+    h += tablaDetalle(grupoSel, det[grupoSel]);
+  }
+  h += '<div class="vacio">Corte de las '+d.hasta+' · '+d.actividades
+     + ' actividades · '+d.tecnicos+' técnicos'
+     + (d.detalle ? '' : ' · este día se guardó antes de que el monitor anotara el detalle')
+     + '</div>';
+  return h;
+}
+
+function tablaDetalle(grupo, filas){
+  const repe = grupo === 'repetidas', reag = grupo === 'reagendadas';
+  let h = '<table class="tdet"><thead><tr>'
+    + '<th>OT</th><th>Técnico</th><th>Actividad</th><th>Franja</th><th>Dirección</th>'
+    + (repe ? '<th>Visitas</th><th>Última vez</th>' : '')
+    + (reag ? '<th>Venía del</th>' : '')
+    + '<th>Estado</th></tr></thead><tbody>';
+  filas.forEach(f => {
+    h += '<tr><td class="ot">'+esc(f.o || '')+'</td>'
+      + '<td>'+esc(f.tec || '')+'</td>'
+      + '<td>'+esc(f.cat || '')+'</td>'
+      + '<td>'+esc(f.f || '')+'</td>'
+      + '<td class="dir">'+esc(f.d || '')+'</td>'
+      + (repe ? '<td>'+(f.visitas ?? '')+'</td><td class="dir">'
+                + esc(f.ult_fecha || '')+(f.ult_cierre ? ' · '+esc(f.ult_cierre) : '')+'</td>' : '')
+      + (reag ? '<td class="dir">'+esc(f.desde || '')+'</td>' : '')
+      + '<td>'+esc(f.e || '')+'</td></tr>';
+  });
+  return h + '</tbody></table>';
 }
 
 cargar();
