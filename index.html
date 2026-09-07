@@ -168,6 +168,23 @@
   #date-btns .date-btn:not(.all).active { background: rgba(104,211,145,0.18); border-color: var(--green); color: var(--green); font-weight: 600; }
   .date-count { font-size: 11px; color: var(--text-3); margin-left: 4px; }
 
+  /* Panel del monitor de rutas (datos que vienen del otro dashboard) */
+  #rutas-dia { margin-bottom: 7px; }
+  #rutas-dia .rd-caja { background: var(--panel-bg, #fff); border: 1px solid rgba(0,0,0,0.08);
+                        border-radius: 10px; padding: 9px 12px; }
+  #rutas-dia .rd-top { display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; margin-bottom:7px; }
+  #rutas-dia .rd-tit { font-size: 12px; font-weight: 700; }
+  #rutas-dia .rd-sub { font-size: 11px; color: var(--text-3); }
+  #rutas-dia .rd-vivo { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 999px;
+                        background: rgba(237,137,54,0.16); color: #b25c08; }
+  #rutas-dia .rd-nums { display: grid; grid-template-columns: repeat(auto-fit,minmax(96px,1fr)); gap: 7px; }
+  #rutas-dia .rd-n { background: rgba(0,0,0,0.03); border-radius: 8px; padding: 7px 9px; }
+  #rutas-dia .rd-n .v { font-size: 19px; font-weight: 700; line-height: 1.1; }
+  #rutas-dia .rd-n .l { font-size: 10px; color: var(--text-3); margin-top: 1px; }
+  #rutas-dia .rd-n.caida .v { color: #c53030; }
+  #rutas-dia .rd-n.nueva .v { color: #2b6cb0; }
+  #rutas-dia .rd-vacio { font-size: 11px; color: var(--text-3); }
+
   /* ── Colores por marca / ciudad en filtros ── */
   .date-btn.mc-claro { border-color: rgba(220,38,38,0.45); color: #f87171; }
   .date-btn.mc-claro:hover { border-color: #dc2626; background: rgba(220,38,38,0.10); }
@@ -533,6 +550,9 @@ const _PRELOADED_DATA = [];
     <div class="kpi sinct"><div class="lbl">Téc. sin completadas</div><div class="val" id="k-sinct">0</div><div class="pct" id="k-sinct-sub">técnicos</div></div>
     <div class="kpi pend"><div class="lbl">Eficiencia</div><div class="val" id="k-pend">0</div><div class="pct" id="k-pend-pct">completadas</div></div>
   </div>
+
+  <!-- Datos del monitor de rutas del dia elegido (ver bloque MONITOR DE RUTAS abajo) -->
+  <div id="rutas-dia" style="display:none;"></div>
 
   <!-- FILA 1: SUPERVISORES | TENDENCIA | TIPOS -->
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:7px;">
@@ -1109,7 +1129,94 @@ function renderDashboard(data, filename) {
     buildTendencia();
     window._tendenciaBuilt = true;
   }
+
+  pintarRutasDia();
 }
+
+/* ==================================================================
+   MONITOR DE RUTAS
+   Trae historico_dias.json, que escribe resumen_dia.py en la carpeta
+   de Rutas-tecnicos y sube generar_rutas.py con subir_extra(). Vive en
+   otro repo, por eso se lee por raw.githubusercontent y no por Pages.
+   Al elegir una fecha aparecen las caidas y las ordenes nuevas de ese
+   dia, que este dashboard no puede saber por su cuenta porque el
+   export del portal no las trae.
+   ================================================================== */
+const URL_RUTAS_DIA =
+  'https://raw.githubusercontent.com/luis-sepulveda/Rutas-tecnicos/data/historico_dias.json';
+
+let RUTAS_DIAS = null;      // null = todavia no llega; {} = llego vacio o fallo
+
+async function cargarRutasDia() {
+  try {
+    const r = await fetch(URL_RUTAS_DIA + '?t=' + Date.now(), { cache: 'no-store' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const j = await r.json();
+    RUTAS_DIAS = j.dias || {};
+  } catch (e) {
+    console.warn('[rutas] no se pudo cargar historico_dias.json:', e);
+    RUTAS_DIAS = {};
+  }
+  pintarRutasDia();
+}
+
+/* La fecha del dashboard viene como dd/mm/aaaa y en el JSON las claves
+   son dd-mm-aaaa. Se prueban las dos por si acaso. */
+function claveRutas(fecha) {
+  if (!fecha) return null;
+  const a = String(fecha).trim();
+  const b = a.replace(/\//g, '-');
+  if (RUTAS_DIAS && RUTAS_DIAS[b]) return b;
+  if (RUTAS_DIAS && RUTAS_DIAS[a]) return a;
+  return null;
+}
+
+function pintarRutasDia() {
+  const caja = document.getElementById('rutas-dia');
+  if (!caja) return;
+
+  /* Solo tiene sentido con UN dia elegido: son cifras del dia, no se suman. */
+  if (!currentFecha || !RUTAS_DIAS) { caja.style.display = 'none'; return; }
+
+  const k = claveRutas(currentFecha);
+  if (!k) {
+    caja.style.display = 'block';
+    caja.innerHTML = '<div class="rd-caja"><span class="rd-vacio">El monitor de rutas no tiene '
+      + 'registro de este día. Empezó a guardar el 05-09-2026.</span></div>';
+    return;
+  }
+
+  const d = RUTAS_DIAS[k];
+  const hoy = new Date();
+  const z = x => String(x).padStart(2, '0');
+  const hoyTxt = z(hoy.getDate()) + '-' + z(hoy.getMonth() + 1) + '-' + hoy.getFullYear();
+  const enCurso = (k === hoyTxt);
+
+  const n = (v, l, cl) => `<div class="rd-n ${cl || ''}"><div class="v">${v ?? 0}</div>`
+                        + `<div class="l">${l}</div></div>`;
+
+  caja.style.display = 'block';
+  caja.innerHTML = `
+    <div class="rd-caja">
+      <div class="rd-top">
+        <span class="rd-tit">Monitor de rutas · ${k}</span>
+        <span class="rd-sub">corte de las ${d.hasta} · ${d.actividades} actividades · ${d.tecnicos} técnicos</span>
+        ${enCurso ? '<span class="rd-vivo">DÍA EN CURSO</span>' : ''}
+      </div>
+      <div class="rd-nums">
+        ${n(d.caidas_total, 'caídas', 'caida')}
+        ${n(d.caidas_activas, 'sin resolver', 'caida')}
+        ${n(d.caidas_resueltas, 'resueltas')}
+        ${n(d.nuevas, 'órdenes nuevas', 'nueva')}
+        ${n(d.al_bucket, 'al bucket')}
+        ${n(d.repetidas, 'direcciones repetidas')}
+        ${n(d.reagendadas, 'reagendadas')}
+        ${n(d.rgu, 'RGU')}
+      </div>
+    </div>`;
+}
+
+cargarRutasDia();
 
 function buildMarcasChart(dataActiva) {
   if (window._marcasChart) { window._marcasChart.destroy(); window._marcasChart = null; }
