@@ -308,12 +308,35 @@ const CIERRES_CLAVE = ['sin moradores','cliente reagenda','cliente desiste','dot
 const MINIMO_CIERRE = 2;
 
 let _nOtras = 0;
+
+/* Lista las ordenes de un motivo de cierre: numero de peticion y tecnico.
+   Ordenada por tecnico, que es como se revisa cuando hay que reclamar. */
+function tablaOrdenes(filas){
+  if(!filas.length) return '';
+  const orden = filas.slice().sort((a,b) =>
+    String(a['Nombre']||'').localeCompare(String(b['Nombre']||'')));
+  let h = '<table class="tdet"><thead><tr><th>Orden de trabajo</th><th>Técnico</th>'
+        + '<th>Actividad</th><th>Franja</th><th>Ciudad</th></tr></thead><tbody>';
+  orden.forEach(r => {
+    h += '<tr><td class="ot">'+esc(r['Orden de Trabajo'] || '')+'</td>'
+      + '<td>'+esc(r['Nombre'] || '')+'</td>'
+      + '<td>'+esc(r['Tipo de Actividad'] || '')+'</td>'
+      + '<td>'+esc(r['Franja'] || '')+'</td>'
+      + '<td class="dir">'+esc(r['Ciudad'] || '')+'</td></tr>';
+  });
+  return h + '</tbody></table>';
+}
 function barras(lista, campo, tope, relevantes){
   const col = (ESTADOS.find(e => e.k === estSel) || {}).c || 'var(--frio)';
   if(!lista.length) return '<div class="vacio">Sin órdenes en esta selección.</div>';
   const c = {};
+  const filasDe = {};          // las ordenes de cada grupo, para el detalle
   const sacar = typeof campo === 'function' ? campo : (r => r[campo]);
-  lista.forEach(r => { const v = sacar(r) || 'Sin dato'; c[v] = (c[v]||0)+1; });
+  lista.forEach(r => {
+    const v = sacar(r) || 'Sin dato';
+    c[v] = (c[v]||0)+1;
+    (filasDe[v] = filasDe[v] || []).push(r);
+  });
   let pares = Object.entries(c).sort((a,b) => b[1]-a[1]);
   let otras = [];
   if(relevantes){
@@ -332,12 +355,19 @@ function barras(lista, campo, tope, relevantes){
   let h = '';
   pares.forEach(([k,v]) => {
     const dotacion = String(k).toLowerCase().indexOf('dotaci') >= 0;
-    h += '<div class="lin"><span class="nm"'
+    /* en el panel de motivos cada fila se abre y muestra sus ordenes */
+    const id = relevantes ? 'mot'+(++_nOtras) : null;
+    h += '<div class="lin'+(id ? ' abrir' : '')+'"'+(id ? ' data-abre="'+id+'"' : '')+'>'
+      + '<span class="nm"'
       + (dotacion ? ' style="color:var(--amarillo2);font-weight:700"' : '')+'>'+esc(k)+'</span>'
       + '<div class="pista"><span style="width:'+(100*v/max)+'%;background:'
       + (dotacion ? 'var(--amarillo)' : col)+'"></span></div>'
       + '<span class="vl">'+v.toLocaleString('es-CL')+'</span>'
       + '<span class="pc">'+pc(v,lista.length)+'</span></div>';
+    if(id){
+      h += '<div id="'+id+'" style="display:none">'
+         + tablaOrdenes(filasDe[k] || []) + '</div>';
+    }
   });
   if(otras.length){
     const s = otras.reduce((a,b) => a+b[1], 0);
