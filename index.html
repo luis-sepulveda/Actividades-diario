@@ -58,9 +58,10 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 /* enlaces a las otras vistas del mismo repo */
 .otras{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px;padding-top:18px;
        border-top:1px solid var(--linea)}
-.otras a{background:var(--panel);border:1px solid var(--linea);border-radius:999px;
-         padding:8px 16px;font-size:13px;color:var(--ink);text-decoration:none}
-.otras a:hover{border-color:var(--linea2)}
+.otras a,.otras button{background:var(--panel);border:1px solid var(--linea);
+         border-radius:999px;padding:8px 16px;font-size:13px;color:var(--ink);
+         text-decoration:none;font-family:inherit;cursor:pointer}
+.otras a:hover,.otras button:hover{border-color:var(--linea2)}
 .otras .et{font-size:12px;color:var(--debil);align-self:center;margin-right:4px}
 
 /* ---- detalle del mes ---- */
@@ -107,6 +108,44 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .rutas .r .n{font-size:20px;font-weight:700;line-height:1.1}
 .rutas .r .l{font-size:11px;color:var(--tenue);margin-top:2px}
 .rutas .r.caida .n{color:var(--mal-texto)}
+
+/* De quien fue la caida */
+.culpa{display:flex;height:30px;border-radius:7px;overflow:hidden;margin-bottom:14px}
+.culpa span{display:flex;align-items:center;justify-content:center;font-size:12px;
+            font-weight:700;color:#fff}
+.cul-cli{background:#94a3b8} .cul-man{background:#7c3aed} .cul-nos{background:var(--mal)}
+.cul-lista .f{display:flex;align-items:center;gap:11px;padding:9px 0;
+              border-bottom:1px solid var(--linea)}
+.cul-lista .f:last-child{border-bottom:0}
+.cul-lista .pt{width:11px;height:11px;border-radius:3px;flex-shrink:0}
+.cul-lista .tx{flex:1;font-size:13px}
+.cul-lista .tx small{display:block;color:var(--debil);font-size:11.5px;margin-top:1px}
+.cul-lista .vv{font-size:17px;font-weight:700}
+.cul-lista .pp{width:52px;text-align:right;font-size:12.5px;color:var(--tenue)}
+
+/* Fila de cifras grandes (la usa el reporte de direcciones repetidas). */
+.cifras{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:11px}
+.cifra{background:var(--panel2);border-radius:10px;padding:11px 13px}
+.cifra .n{font-size:25px;font-weight:700;line-height:1.1}
+.cifra .l{font-size:11.5px;color:var(--tenue);margin-top:2px}
+
+/* Reporte de direcciones repetidas */
+.rep-fila{display:flex;align-items:center;gap:11px;padding:8px 7px;cursor:pointer;
+          border-bottom:1px solid var(--linea)}
+.rep-fila:hover{background:var(--hover)}
+.rep-fila .veces{width:30px;text-align:center;font-weight:700;font-size:14px;flex-shrink:0;
+                 border-radius:6px;padding:2px 0;background:var(--panel2)}
+.rep-fila.alta .veces{background:var(--mal);color:#fff}
+.rep-fila.media .veces{background:var(--amarillo);color:#6b4c07}
+.rep-fila .dirn{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rep-fila .ultv{width:92px;text-align:right;font-size:11.5px;color:var(--debil);flex-shrink:0}
+.rep-fila .fle{width:14px;font-size:10px;color:var(--debil);flex-shrink:0}
+.rep-det{padding:2px 0 12px 48px}
+.rep-det table{width:100%;border-collapse:collapse;font-size:12px}
+.rep-det td{padding:5px 8px;border-bottom:1px dashed var(--linea)}
+.rep-det .ot{font-family:ui-monospace,Menlo,monospace;font-size:11px;white-space:nowrap}
+.rep-det .malo{color:var(--mal);font-weight:600}
+.rep-det .der{color:var(--debil);font-size:11px}
 .rutas .r.abre{cursor:pointer;transition:.12s}
 .rutas .r.abre:hover{background:var(--linea)}
 .rutas .r.abre.on{background:var(--ink)}
@@ -215,11 +254,198 @@ function portada(){
   });
   h += '</div>'
     + '<div class="otras"><span class="et">También:</span>'
+    + '<button id="btn-rep">Direcciones repetidas</button>'
     + '<a href="pantalla.html">Vista de pantalla</a>'
     + '</div>';
   document.getElementById('vista').innerHTML = h;
   document.querySelectorAll('.mes').forEach(e =>
     e.addEventListener('click', () => { mesSel = e.dataset.m; diaSel = null; estSel = 'Completado'; verMes(); }));
+  const br = document.getElementById('btn-rep');
+  if(br) br.addEventListener('click', verRepetidas);
+}
+
+/* ================= DIRECCIONES REPETIDAS =================
+   Reporte para reclamarle al mandante. Sale del historial_dir.json que
+   arma historial_dir.py en la carpeta de rutas y publica generar_rutas.py.
+   Cada direccion trae todas sus visitas con fecha, OT, tecnico, codigo de
+   cierre y a que area quedo derivada. Eso ultimo es la prueba: cuando dice
+   "Comercial Venta" es el propio sistema del mandante reconociendo que el
+   dato lo ingresaron ellos.
+   ========================================================= */
+const URL_HIST_DIR =
+  'https://raw.githubusercontent.com/luis-sepulveda/Rutas-tecnicos/data/historial_dir.json';
+let HIST_DIR = null;
+let mesRep = null;          // null = todo el periodo; si no, 'AAAA-MM'
+/* Codigos que apuntan a un dato mal ingresado por el mandante. */
+const CIERRE_DATO_MALO = ['direccion incorrecta','direccion no encontrada','orden mal generada'];
+
+async function verRepetidas(){
+  mesSel = null; diaSel = null;
+  document.getElementById('titulo').textContent = 'Direcciones repetidas';
+  document.getElementById('subtitulo').textContent = 'Cargando el historial…';
+  document.getElementById('vista').innerHTML = '';
+  if(!HIST_DIR){
+    try{
+      const r = await fetch(URL_HIST_DIR + '?t=' + Date.now(), {cache:'no-store'});
+      HIST_DIR = await r.json();
+    }catch(e){
+      document.getElementById('subtitulo').textContent =
+        'No se pudo cargar el historial de direcciones desde el repo de rutas.';
+      document.getElementById('vista').innerHTML =
+        '<div class="caja"><button class="btn" id="volver">← Meses</button></div>';
+      document.getElementById('volver').addEventListener('click', portada);
+      return;
+    }
+  }
+  mesRep = null;
+  pintarRepetidas();
+}
+
+/* 'dd-mm-aaaa' -> 'aaaa-mm' */
+function bonitoMesRep(ym){
+  const p = String(ym).split('-');
+  return MES[+p[1]-1] + ' ' + p[0];
+}
+
+function mesDeVisita(f){
+  const p = String(f||'').split('-');
+  return p.length === 3 ? p[2]+'-'+p[1] : null;
+}
+
+function pintarRepetidas(){
+  const H = HIST_DIR || {};
+  const todas = H.dirs || [];
+
+  /* Meses que aparecen en el historial, para los botones de arriba. */
+  const meses = [...new Set(todas.flatMap(x => (x.v||[]).map(v => mesDeVisita(v.f))))]
+                .filter(Boolean).sort();
+
+  /* Con un mes elegido se cuentan SOLO las visitas de ese mes. Una direccion
+     aparece si tuvo al menos una visita ahi, y al lado se deja su total
+     historico para no perder el contexto. */
+  const visitasDe = x => mesRep ? (x.v||[]).filter(v => mesDeVisita(v.f) === mesRep) : (x.v||[]);
+  const dirs = todas
+    .map(x => ({...x, vm: visitasDe(x)}))
+    .filter(x => x.vm.length)
+    .sort((a,b) => b.vm.length - a.vm.length || (b.n||0) - (a.n||0));
+
+  document.getElementById('subtitulo').textContent = mesRep
+    ? bonitoMesRep(mesRep) + ' · historial desde el ' + (H.desde||'')
+    : 'Del ' + (H.desde||'') + ' al ' + (H.hasta||'') + ' · ' + (H.dias||0) + ' días';
+
+  const viajes = dirs.reduce((s,x) => s + x.vm.length, 0);
+  const esMalo = v => CIERRE_DATO_MALO.some(k =>
+      String(v.cierre||'').toLowerCase().indexOf(k) >= 0);
+  const malas  = dirs.filter(x => x.vm.some(esMalo));
+  const viajesMalos = malas.reduce((s,x) => s + x.vm.length, 0);
+
+  const der = {};
+  let comercial = 0;
+  dirs.forEach(x => x.vm.forEach(v => {
+    const d = String(v.deriv || '').trim();
+    if(!d) return;
+    der[d] = (der[d]||0) + 1;
+    if(d.toLowerCase().indexOf('comercial') >= 0) comercial++;
+  }));
+
+  const chips = '<div class="fila-f"><span class="et">Período</span>'
+    + '<button class="chip'+(!mesRep?' on':'')+'" data-mr="">Todo</button>'
+    + meses.map(m => '<button class="chip'+(mesRep===m?' on':'')+'" data-mr="'+m+'">'
+        + bonitoMesRep(m)+'</button>').join('')
+    + '</div>';
+
+  /* cuantas direcciones por cantidad de visitas (en el periodo elegido) */
+  const porN = {};
+  dirs.forEach(x => { const k = Math.min(x.vm.length, 5); porN[k] = (porN[k]||0)+1; });
+  const etiqueta = k => k >= 5 ? '5 o más visitas' : k + ' visitas';
+
+  let barrasN = '';
+  Object.keys(porN).sort((a,b) => a-b).forEach(k => {
+    const v = porN[k], max = Math.max(...Object.values(porN));
+    barrasN += '<div class="lin"><span class="nm">'+etiqueta(+k)+'</span>'
+      + '<div class="pista"><span style="width:'+(100*v/max)+'%;background:'
+      + (+k >= 4 ? 'var(--mal)' : +k === 3 ? 'var(--amarillo)' : 'var(--gris)')+'"></span></div>'
+      + '<span class="vl">'+v+'</span>'
+      + '<span class="pc">'+pc(v, dirs.length)+'</span></div>';
+  });
+
+  let barrasD = '';
+  Object.entries(der).sort((a,b) => b[1]-a[1]).slice(0,6).forEach(([k,v]) => {
+    const esCom = k.toLowerCase().indexOf('comercial') >= 0;
+    const max = Math.max(...Object.values(der));
+    barrasD += '<div class="lin"><span class="nm"'
+      + (esCom ? ' style="color:var(--mal-texto);font-weight:700"' : '')+'>'+esc(k)+'</span>'
+      + '<div class="pista"><span style="width:'+(100*v/max)+'%;background:'
+      + (esCom ? 'var(--mal)' : 'var(--gris)')+'"></span></div>'
+      + '<span class="vl">'+v+'</span></div>';
+  });
+
+  let lista = '';
+  dirs.slice(0, 60).forEach((x, i) => {
+    const nv = x.vm.length;
+    const cl = nv >= 5 ? ' alta' : nv >= 3 ? ' media' : '';
+    const id = 'rep'+i;
+    const extra = (mesRep && (x.n||0) > nv)
+      ? ' <span style="color:var(--debil);font-size:11.5px">· '+x.n+' en total</span>' : '';
+    lista += '<div class="rep-fila'+cl+'" data-abre="'+id+'">'
+      + '<span class="veces">'+nv+'</span>'
+      + '<span class="dirn">'+esc(x.d||'')+extra+'</span>'
+      + '<span class="ultv">última '+esc(x.ult||'')+'</span>'
+      + '<span class="fle">▾</span></div>'
+      + '<div id="'+id+'" class="rep-det" style="display:none"><table><tbody>';
+    /* el detalle muestra SIEMPRE todas las visitas: el caso se entiende
+       entero, y las del mes elegido van resaltadas */
+    (x.v||[]).forEach(v => {
+      const malo = CIERRE_DATO_MALO.some(k =>
+        String(v.cierre||'').toLowerCase().indexOf(k) >= 0);
+      const delMes = mesRep && mesDeVisita(v.f) === mesRep;
+      lista += '<tr'+(delMes ? ' style="background:var(--zebra)"' : '')+'>'
+        + '<td style="width:88px"'+(delMes ? ' class="malo"' : '')+'>'+esc(v.f||'')+'</td>'
+        + '<td class="ot">'+esc(v.o||'')+'</td>'
+        + '<td>'+esc(v.tec||'')+'</td>'
+        + '<td>'+esc(v.cat||'')+'</td>'
+        + '<td'+(malo ? ' class="malo"' : '')+'>'+esc(v.cierre || 'Completada')+'</td>'
+        + '<td class="der">'+esc(v.deriv||'')+'</td></tr>';
+    });
+    lista += '</tbody></table></div>';
+  });
+
+  document.getElementById('vista').innerHTML = `
+  <div class="fila-f"><button class="btn" id="volver">← Meses</button></div>
+  ${chips}
+
+  <div class="caja">
+    <h2>Viajes a direcciones ya visitadas${mesRep ? ' <span class="chico">contando solo las visitas de '+bonitoMesRep(mesRep)+'</span>' : ''}</h2>
+    <div class="cifras">
+      <div class="cifra"><div class="n">${viajes}</div><div class="l">viajes repetidos</div></div>
+      <div class="cifra"><div class="n">${dirs.length}</div><div class="l">direcciones</div></div>
+      <div class="cifra"><div class="n" style="color:var(--mal-texto)">${malas.length}</div><div class="l">con dato mal ingresado</div></div>
+      <div class="cifra"><div class="n" style="color:var(--mal-texto)">${viajesMalos}</div><div class="l">viajes a esas</div></div>
+      <div class="cifra"><div class="n" style="color:var(--mal-texto)">${comercial}</div><div class="l">derivadas a Comercial</div></div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="caja"><h2>Cuántas veces se visitó cada dirección</h2>${barrasN}</div>
+    <div class="caja"><h2>A qué área quedó derivada la visita</h2>${barrasD}</div>
+  </div>
+
+  <div class="caja">
+    <h2>Detalle <span class="chico">las ${Math.min(60, dirs.length)} más visitadas · toca una para ver cada visita</span></h2>
+    ${lista}
+  </div>`;
+
+  document.getElementById('volver').addEventListener('click', portada);
+  document.querySelectorAll('.chip[data-mr]').forEach(b =>
+    b.addEventListener('click', () => { mesRep = b.dataset.mr || null; pintarRepetidas(); }));
+  document.querySelectorAll('.rep-fila').forEach(f =>
+    f.addEventListener('click', () => {
+      const c = document.getElementById(f.dataset.abre);
+      const ab = c.style.display !== 'none';
+      c.style.display = ab ? 'none' : 'block';
+      f.querySelector('.fle').textContent = ab ? '▾' : '▴';
+    }));
+  window.scrollTo(0,0);
 }
 
 /* ================= DETALLE DEL MES ================= */
@@ -260,6 +486,9 @@ function verMes(){
      + '<span class="chico">'+sel.length.toLocaleString('es-CL')+' órdenes</span></h2>'
      + barras(sel, categoria) + '</div>';
 
+  if(estSel === 'No Realizada'){
+    h += panelCulpa(sel);
+  }
   if(estSel === 'No Realizada' || estSel === 'Cancelado'){
     h += '<div class="caja"><h2>Motivo de cierre'
        + '<span class="chico">las más relevantes</span></h2>'
@@ -302,6 +531,32 @@ function verMes(){
 /* Motivos que siempre se muestran aunque tengan pocas ordenes: son los que
    se miran si o si. La falta de dotacion ademas sale en amarillo, porque no
    es una falla del tecnico sino que no hubo quien la tomara. */
+/* ============ DE QUIEN FUE LA CAIDA ============
+   Reparte los motivos de cierre en tres responsables. Sirve para responder
+   con numero cuando preguntan por el porcentaje de no realizadas: la mayoria
+   no son de la empresa.
+
+   - cliente : no estaba, reagenda, desiste. Nadie lo controla.
+   - mandante: VTR/Claro. Incluye la red (NAP, ductos, aprovisionamiento) y
+               los datos mal ingresados por su area comercial (direccion
+               incorrecta o no encontrada, nombre del cliente, etc).
+   - empresa : lo unico que depende de nosotros (falta de dotacion).
+
+   Si aparece un codigo nuevo cae en 'empresa' a proposito, para que se note
+   y se clasifique, en vez de esconderse en el saco de los demas. */
+const CULPA_CLIENTE  = ['sin moradores','reagenda','desiste','sin contacto',
+                        'sin acceso','sin apoyo','casa sin medidor'];
+const CULPA_MANDANTE = ['falla','nap','ducto','sin red','niveles','poste',
+                        'factible','masiva','contingencia','direccion',
+                        'derivaci','ticket','zona roja','riesgo','mal generada'];
+
+function culpaDe(codigo){
+  const c = String(codigo || '').toLowerCase();
+  if(CULPA_CLIENTE.some(k => c.indexOf(k) >= 0))  return 'cliente';
+  if(CULPA_MANDANTE.some(k => c.indexOf(k) >= 0)) return 'mandante';
+  return 'empresa';
+}
+
 const CIERRES_CLAVE = ['sin moradores','cliente reagenda','cliente desiste','dotaci'];
 /* Un motivo entra si pesa al menos este porcentaje del total. Con 5 salian
    17 filas y eso ya no es "lo relevante". Si quieres ver mas, baja el numero. */
@@ -393,6 +648,42 @@ function barras(lista, campo, tope, relevantes){
 const GRUPOS_RUTAS = {caidas:'caídas', nuevas:'órdenes nuevas',
                       repetidas:'repetidas', reagendadas:'reagendadas'};
 let grupoSel = null;
+
+/* Bloque de responsables. Va completo, no dentro de la reja de dos columnas,
+   porque es el numero que se lleva a reunion. */
+function panelCulpa(lista){
+  if(!lista.length) return '';
+  const c = {cliente:0, mandante:0, empresa:0};
+  const det = {cliente:{}, mandante:{}, empresa:{}};
+  lista.forEach(r => {
+    const k = culpaDe(r['Código de Cierre']);
+    c[k]++;
+    const m = r['Código de Cierre'] || 'Sin código';
+    det[k][m] = (det[k][m] || 0) + 1;
+  });
+  const t = lista.length;
+  const p = v => Math.round(1000*v/t)/10;
+  const top = o => Object.entries(o).sort((a,b) => b[1]-a[1]).slice(0,3)
+                     .map(x => x[0]).join(' · ') || '—';
+
+  const seg = (v, cl) => v ? `<span class="${cl}" style="width:${100*v/t}%">${
+    p(v) >= 8 ? p(v).toFixed(1).replace('.',',')+'%' : ''}</span>` : '';
+
+  const fila = (v, cl, tit, sub) => `<div class="f"><span class="pt ${cl}"></span>
+      <span class="tx">${tit}<small>${sub}</small></span>
+      <span class="vv">${v}</span>
+      <span class="pp">${p(v).toFixed(1).replace('.',',')}%</span></div>`;
+
+  return `<div class="caja">
+    <h2>De quién fue la caída <span class="chico">${t} órdenes no realizadas</span></h2>
+    <div class="culpa">${seg(c.cliente,'cul-cli')}${seg(c.mandante,'cul-man')}${seg(c.empresa,'cul-nos')}</div>
+    <div class="cul-lista">
+      ${fila(c.cliente,'cul-cli','Del cliente', top(det.cliente))}
+      ${fila(c.mandante,'cul-man','Del mandante · VTR/Claro', top(det.mandante))}
+      ${fila(c.empresa,'cul-nos','De la empresa', top(det.empresa))}
+    </div>
+  </div>`;
+}
 
 function panelRutas(){
   if(!diaSel) return '<div class="vacio">Elige un día arriba para ver las caídas y las órdenes nuevas de esa jornada.</div>';
