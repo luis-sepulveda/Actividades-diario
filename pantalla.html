@@ -49,8 +49,13 @@ body{background:var(--fondo);color:var(--texto);font-family:'DM Sans',system-ui,
 .trio .l{font-size:13px;color:var(--tenue);margin-top:3px}
 
 .medidor{margin-top:6px}
-.medidor .barra{height:26px;background:var(--azulejo2);border-radius:8px;position:relative;overflow:hidden}
-.medidor .relleno{height:100%;background:var(--ok);border-radius:8px}
+.medidor .barra{height:26px;background:var(--azulejo2);border-radius:8px;position:relative;overflow:hidden;display:flex}
+.medidor .relleno{height:100%;background:var(--ok);border-radius:8px;flex:none}
+/* franja de hoy: se pega a la derecha del verde. Es solo aviso visual,
+   no entra en el porcentaje ni mueve el tope. */
+.medidor .hoy{height:100%;background:var(--ojo);flex:none}
+.medidor .detalle{font-size:12px;color:var(--tenue);margin-top:7px;line-height:1.5}
+.medidor .detalle b{color:var(--ojo);font-weight:700}
 .medidor .tope{position:absolute;top:-3px;bottom:-3px;left:50%;border-left:3px dashed var(--mal)}
 .medidor .pie{display:flex;justify-content:space-between;font-size:12px;color:var(--debil);margin-top:6px}
 
@@ -93,6 +98,8 @@ body{background:var(--fondo);color:var(--texto);font-family:'DM Sans',system-ui,
 <script>
 const TOPE_SM = 50;
 const REFRESCO = 5 * 60 * 1000;
+const URL_RUTAS = 'https://raw.githubusercontent.com/luis-sepulveda/Rutas-tecnicos/data/rutas.json';
+const CIE_SM = 'sin moradores';   // se compara normalizado, no literal
 
 function n1(x){ return x.toFixed(1).replace('.', ','); }
 function esc(s){ return String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c])); }
@@ -122,6 +129,17 @@ function clave(d){
 }
 function efec(l){ return l.length ? 100*l.filter(r=>r['Estado']==='Completado').length/l.length : 0; }
 
+/* Los nombres del portal vienen con espacio duro (\u00a0) en vez de espacio
+   normal: hoy pasa en ALFREDO ALCAYAGA F y DANIEL NAVARRETE E. A la vista
+   son idénticos, pero no calzan al comparar. Se limpia siempre, no esos dos
+   a mano, porque mañana puede aparecer un tercero. */
+function limpiaNom(s){
+  return String(s||'').replace(/[\u00a0\u202f\u2007]/g,' ').replace(/\s+/g,' ').trim();
+}
+function normTxt(s){
+  return limpiaNom(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+}
+
 async function cargar(){
   let filas = [], rutas = {};
   try{
@@ -133,10 +151,32 @@ async function cargar(){
     const r = await fetch('https://raw.githubusercontent.com/luis-sepulveda/Rutas-tecnicos/data/historico_dias.json?t='+Date.now(), {cache:'no-store'});
     rutas = (await r.json()).dias || {};
   }catch(e){ rutas = {}; }
-  pintar(filas, rutas);
+  /* rutas.json es la foto en vivo del día, del mismo repo. Si no llega,
+     el panel de sin moradores se pinta como antes y no se cae nada. */
+  let vivo = null;
+  try{
+    const r = await fetch(URL_RUTAS+'?t='+Date.now(), {cache:'no-store'});
+    vivo = await r.json();
+  }catch(e){ vivo = null; }
+  pintar(filas, rutas, vivo);
 }
 
-function pintar(filas, rutas){
+/* Cuenta las órdenes de HOY cerradas como sin moradores, leyendo el campo
+   `cie` de cada orden de rutas.json. Devuelve el total y el desglose por
+   técnico. Ojo: rutas.json solo trae Quilpué y Villa Alemana, o sea los 36
+   técnicos propios, no toda la región. */
+function smDeHoy(vivo){
+  if(!vivo || !vivo.tecnicos) return null;
+  let total = 0; const porTec = [];
+  Object.keys(vivo.tecnicos).forEach(tec => {
+    const n = (vivo.tecnicos[tec]||[]).filter(o => normTxt(o.cie) === CIE_SM).length;
+    if(n){ total += n; porTec.push({tec: limpiaNom(tec), n}); }
+  });
+  porTec.sort((a,b) => b.n - a.n || a.tec.localeCompare(b.tec));
+  return {total, porTec, fecha: vivo.fecha_datos, hora: vivo.actualizado};
+}
+
+function pintar(filas, rutas, vivo){
   filas.forEach(r => r._f = aFecha(r['Fecha']));
   filas = filas.filter(r => r._f);
 
@@ -157,6 +197,24 @@ function pintar(filas, rutas){
   /* --- sin moradores de la semana --- */
   const sm = B.filter(r => r['Código de Cierre'] === 'Sin moradores').length;
   const smPct = B.length ? 100*sm/B.length : 0;
+
+  /* --- sin moradores de HOY, en vivo desde rutas.json --- */
+  /* Tres razones para NO sumar la franja, y cada una avisa distinto:
+     - el día de rutas.json cae en otra semana que la barra (caso lunes:
+       datos.json todavía trae la semana pasada)
+     - ese día ya está cargado en datos.json, o sea ya está contado en verde
+     - domingo, que la semana de lunes a sábado no considera            */
+  const hoyVivo = smDeHoy(vivo);
+  let smHoy = null, motivoHoy = '';
+  if(hoyVivo){
+    const fR = aFecha(hoyVivo.fecha);
+    if(!fR){ motivoHoy = ''; }
+    else if(fR.getDay() === 0){ motivoHoy = 'domingo, fuera de la semana'; }
+    else if(dias.includes(clave(fR))){ motivoHoy = 'el día ya está cargado, va contado en verde'; }
+    else if(clave(lunesDe(fR)) !== sems[sems.length-1]){ motivoHoy = 'hoy es de otra semana que la barra'; }
+    else { smHoy = hoyVivo; }
+  }
+  const smHoyPct = (smHoy && B.length) ? 100*smHoy.total/B.length : 0;
 
   /* --- que se movio, por tipo de actividad --- */
   const movs = [];
@@ -194,6 +252,22 @@ function pintar(filas, rutas){
     });
   }
 
+  /* Línea de detalle bajo la barra: qué técnicos pusieron sin moradores hoy.
+     Se muestran los 6 primeros para no romper el azulejo; el resto se
+     resume, que esta pantalla es para mirar de lejos, no para auditar. */
+  let detalleHoy = '';
+  if(smHoy && smHoy.total){
+    const top = smHoy.porTec.slice(0,6)
+      .map(x => esc(x.tec)+' <b>'+x.n+'</b>').join(' · ');
+    const resto = smHoy.porTec.length - 6;
+    detalleHoy = '<div class="detalle">Hoy · ' + top
+      + (resto > 0 ? ' · +'+resto+' técnico'+(resto>1?'s':'') : '') + '</div>';
+  } else if(smHoy){
+    detalleHoy = '<div class="detalle">Hoy · sin moradores en 0 órdenes cerradas</div>';
+  } else if(motivoHoy){
+    detalleHoy = '<div class="detalle">Hoy no se suma · '+esc(motivoHoy)+'</div>';
+  }
+
   let barras = '';
   ult.forEach(d => {
     const alto = Math.max(6, Math.round(d.ef/maxEf*74));
@@ -225,10 +299,15 @@ function pintar(filas, rutas){
       <div class="rot">Sin moradores de la semana · tope ${TOPE_SM}%</div>
       <div class="medidor">
         <div class="barra">
-          <div class="relleno" style="width:${Math.min(smPct,100)}%;background:${smPct>TOPE_SM?'var(--mal)':'var(--ok)'}"></div>
+          <div class="relleno" style="width:${Math.min(smPct,100)}%;background:${smPct>TOPE_SM?'var(--mal)':'var(--ok)'};border-radius:${smHoy&&smHoy.total?'8px 0 0 8px':'8px'}"></div>
+          ${smHoy&&smHoy.total ? `<div class="hoy" style="width:${Math.min(smHoyPct,100-Math.min(smPct,100))}%;border-radius:0 8px 8px 0"></div>` : ''}
           <div class="tope"></div>
         </div>
-        <div class="pie"><span>${sm} de ${B.length} · ${n1(smPct)}%</span><span>tope ${TOPE_SM}%</span></div>
+        <div class="pie">
+          <span>${sm} de ${B.length} · ${n1(smPct)}%${smHoy&&smHoy.total?` <span style="color:var(--ojo)">+ ${smHoy.total} hoy</span>`:''}</span>
+          <span>tope ${TOPE_SM}%</span>
+        </div>
+        ${detalleHoy}
       </div>
     </div>
 
