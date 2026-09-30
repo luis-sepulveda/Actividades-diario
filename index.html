@@ -292,6 +292,10 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .chip[data-su]{background:#fef6e4;border-color:#f1d08e;color:#78350f}
 .chip[data-su]:not(.on):hover{border-color:#e8b33f;color:#92400e;box-shadow:0 4px 10px rgba(224,163,33,.16)}
 .chip.on[data-su]{background:#fde6ab;border-color:#e0a321;color:#92400e;box-shadow:0 0 0 3px rgba(224,163,33,.20)}
+/* nombres de las filas (MES, SEMANA, SUPERVISOR, ORDENAR POR) mas oscuros:
+   el gris claro de antes costaba leerlo en proyector (30-09-2026, Luis) */
+.fila-f:has(> .chip[data-mq]) .et,.fila-f:has(> .chip[data-sq]) .et,.fila-f:has(> .chip[data-su]) .et,
+.fila-f:has(> .chip[data-oq]) .et{color:#475569;font-weight:700}
 </style>
 </head>
 <body>
