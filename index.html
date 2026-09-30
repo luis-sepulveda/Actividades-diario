@@ -229,6 +229,69 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .chip[data-oq]:not(.on):hover,.chip[data-tp]:not(.on):hover{border-color:#9dbcf2;color:#1d4ed8}
 /* la fila del tecnico abierto, en el mismo azul muy suave */
 .qb-tabla tr.tec.abierta td{background:#f0f6ff}
+
+/* ============================================================
+   QUIEBRES: BOTONES DE SELECCION (30-09-2026)
+   Luis: con el azul claro "no se sabe que son botones de
+   seleccion"; se probo una barra de piezas pegadas y pidio
+   "separados, con los bordes redondeados y mas bonito". Cada
+   opcion (mes, semana, supervisor, ordenar por y Todo/Altas/
+   Migraciones) es un boton blanco suelto, redondeado, con borde y
+   sombra; al pasar el mouse sube un poco; el elegido va en azul
+   claro con borde azul y un check. Va despues del bloque MENOS
+   NEGRO y lo pisa. Para volver a las pildoras: borrar este bloque.
+   ============================================================ */
+.fila-f:has(> .chip[data-mq]),.fila-f:has(> .chip[data-sq]),.fila-f:has(> .chip[data-su]),
+.fila-f:has(> .chip[data-oq]),.fila-f:has(> .chip[data-tp]){gap:8px;margin-bottom:10px}
+.fila-f:has(> .chip[data-mq]) .et,.fila-f:has(> .chip[data-sq]) .et,.fila-f:has(> .chip[data-su]) .et,
+.fila-f:has(> .chip[data-oq]) .et{width:96px;flex-shrink:0;margin-right:0}
+.chip[data-mq],.chip[data-sq],.chip[data-su],.chip[data-oq],.chip[data-tp]{
+  background:#fff;border:1px solid #d3dde9;color:#334155;border-radius:10px;
+  padding:8px 15px;font-size:12.5px;font-weight:500;line-height:1.2;
+  box-shadow:0 1px 2px rgba(20,45,70,.07),0 1px 1px rgba(20,45,70,.04);
+  transition:border-color .12s,box-shadow .12s,transform .12s,color .12s}
+.chip[data-mq]:not(.on):hover,.chip[data-sq]:not(.on):hover,.chip[data-su]:not(.on):hover,
+.chip[data-oq]:not(.on):hover,.chip[data-tp]:not(.on):hover{
+  border-color:#93b4ec;color:#1d4ed8;transform:translateY(-1px);
+  box-shadow:0 4px 10px rgba(29,78,216,.10)}
+.chip.on[data-mq],.chip.on[data-sq],.chip.on[data-su],.chip.on[data-oq],.chip.on[data-tp]{
+  background:#eaf2ff;border-color:#3b82f6;color:#1d4ed8;font-weight:700;
+  box-shadow:0 0 0 3px rgba(59,130,246,.14)}
+.chip.on[data-mq]::before,.chip.on[data-sq]::before,.chip.on[data-su]::before,
+.chip.on[data-oq]::before,.chip.on[data-tp]::before{content:'✓';margin-right:6px;font-weight:700}
+.chip[data-mq]:focus-visible,.chip[data-sq]:focus-visible,.chip[data-su]:focus-visible,
+.chip[data-oq]:focus-visible,.chip[data-tp]:focus-visible{outline:2px solid #1d4ed8;outline-offset:2px}
+@media (prefers-reduced-motion:reduce){
+  .chip[data-mq],.chip[data-sq],.chip[data-su],.chip[data-oq],.chip[data-tp]{transition:none}
+  .chip[data-mq]:hover,.chip[data-sq]:hover,.chip[data-su]:hover,.chip[data-oq]:hover,.chip[data-tp]:hover{transform:none}
+}
+.qb-tipos .qb-cuenta{margin-left:6px}
+/* en el celular el nombre de la fila va arriba */
+@media (max-width:700px){
+  .fila-f:has(> .chip[data-mq]) .et,.fila-f:has(> .chip[data-sq]) .et,.fila-f:has(> .chip[data-su]) .et,
+  .fila-f:has(> .chip[data-oq]) .et{width:100%}
+}
+
+/* ============================================================
+   QUIEBRES: COLOR POR FILA (30-09-2026, pedido de Luis)
+   Meses en celeste claro, semanas en verde claro, supervisores en
+   ambar claro. El elegido va en el mismo color, mas fuerte, con
+   borde marcado y el check. "Ordenar por" y Todo/Altas/Migraciones
+   siguen en blanco y azul. Va despues de "BOTONES DE SELECCION" y
+   lo pisa. Para volver a todo blanco: borrar este bloque.
+   ============================================================ */
+/* meses: celeste */
+.chip[data-mq]{background:#e8f7fd;border-color:#a9dcf1;color:#0c4a6e}
+.chip[data-mq]:not(.on):hover{border-color:#38bdf8;color:#075985;box-shadow:0 4px 10px rgba(14,165,233,.14)}
+.chip.on[data-mq]{background:#bfe8fb;border-color:#0ea5e9;color:#075985;box-shadow:0 0 0 3px rgba(14,165,233,.18)}
+/* semanas: verde */
+.chip[data-sq]{background:#ebf8ef;border-color:#aedcbb;color:#14532d}
+.chip[data-sq]:not(.on):hover{border-color:#4cc27a;color:#166534;box-shadow:0 4px 10px rgba(34,165,90,.14)}
+.chip.on[data-sq]{background:#c3efd0;border-color:#22a55a;color:#166534;box-shadow:0 0 0 3px rgba(34,165,90,.18)}
+/* supervisores: ambar */
+.chip[data-su]{background:#fef6e4;border-color:#f1d08e;color:#78350f}
+.chip[data-su]:not(.on):hover{border-color:#e8b33f;color:#92400e;box-shadow:0 4px 10px rgba(224,163,33,.16)}
+.chip.on[data-su]{background:#fde6ab;border-color:#e0a321;color:#92400e;box-shadow:0 0 0 3px rgba(224,163,33,.20)}
 </style>
 </head>
 <body>
