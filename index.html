@@ -234,6 +234,18 @@ const ESTADOS = [
 ];
 let FILAS = [], RUTAS = {}, mesSel = null, diaSel = null, estSel = 'Completado';
 
+/* (30-09-2026, pedido de Luis) Pagina SOLO de quiebres: si se abre con
+   #quiebres (boton Quiebres de la barra del Modulo) se muestra como pagina
+   propia desde el primer momento: titulo y pestana "Quiebres por tecnico",
+   sin "Actividades · Cargando..." mientras baja datos.json y sin el boton
+   "← Meses". Sin #quiebres, todo sigue igual que siempre. */
+const SOLO_QB = location.hash === '#quiebres';
+if(SOLO_QB){
+  document.title = 'Quiebres por técnico';
+  document.getElementById('titulo').textContent = 'Quiebres por técnico';
+  document.getElementById('subtitulo').textContent = 'Cargando las semanas…';
+}
+
 /* Etiqueta con la que se muestra cada actividad.
    Las altas, migraciones y traslados se abren en 1P, 2P y 3P.
    Las reparaciones NO: cuentan como una unidad y van en su propia fila,
@@ -275,7 +287,11 @@ async function cargar(){
     const r = await fetch('https://raw.githubusercontent.com/luis-sepulveda/Rutas-tecnicos/data/historico_dias.json?t='+Date.now(), {cache:'no-store'});
     RUTAS = (await r.json()).dias || {};
   }catch(e){ RUTAS = {}; }
-  portada();
+  /* (30-09-2026) Acceso directo: con .../Actividades-diario/#quiebres se
+     abre de una la vista de quiebres (lo usa el boton Quiebres de la barra
+     del Modulo). "← Meses" sigue llevando a la portada. */
+  if(SOLO_QB) verQuiebres();
+  else portada();
 }
 
 /* ================= PORTADA ================= */
@@ -999,7 +1015,7 @@ function pintarQuiebres(semanas){
   tecs.forEach(o => { tot.asig += o.asig; tot.comp += o.comp; tot.q += o.q; tot.recup += o.recup;
                       Object.keys(tot.resp).forEach(k => tot.resp[k] += o.resp[k]); });
 
-  let h = '<div class="fila-f"><button class="btn" id="volver">← Meses</button></div>'
+  let h = (SOLO_QB ? '' : '<div class="fila-f"><button class="btn" id="volver">← Meses</button></div>')
     + '<div class="fila-f"><span class="et">Mes</span>'
     + [...new Set(semanas.map(k => QB_MES_SEM[k]))].sort().reverse()
         .map(m => '<button class="chip qb-mes'+(m===mesQb?' on':'')+'" data-mq="'+m+'">'
@@ -1083,7 +1099,7 @@ function pintarQuiebres(semanas){
     + 'cuenta para el que la tenía al final.</div>';
 
   document.getElementById('vista').innerHTML = h;
-  document.getElementById('volver').addEventListener('click', portada);
+  if(!SOLO_QB) document.getElementById('volver').addEventListener('click', portada);
   document.querySelectorAll('.chip[data-sq]').forEach(b => b.addEventListener('click', () => {
     semQb = b.dataset.sq; abiertoQb = null; pintarQuiebres(semanas); }));
   /* al cambiar de mes queda elegida su ultima semana */
