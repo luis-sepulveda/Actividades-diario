@@ -212,6 +212,23 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .qb-tabla .tdet .desp{color:var(--ok);font-size:11.5px}
 .qb-nota{font-size:12px;color:var(--tenue);line-height:1.5}
 .qb-nota b{color:var(--ink)}
+
+/* ============================================================
+   QUIEBRES: MENOS NEGRO (30-09-2026, Luis: "mucho negro")
+   Los botones elegidos de la vista de quiebres (mes, semana,
+   supervisor, ordenar por y Todo/Altas/Migraciones) iban rellenos
+   en negro. Ahora van en azul claro con letra azul: se nota cual
+   esta elegido sin manchar la pantalla. Solo la vista de quiebres;
+   el resto del dashboard queda igual. Para volver al negro: borrar
+   este bloque.
+   ============================================================ */
+.chip.on[data-mq],.chip.on[data-sq],.chip.on[data-su],
+.chip.on[data-oq],.chip.on[data-tp]{
+  background:#e0ecff;border-color:#9dbcf2;color:#1d4ed8;font-weight:700}
+.chip[data-mq]:not(.on):hover,.chip[data-sq]:not(.on):hover,.chip[data-su]:not(.on):hover,
+.chip[data-oq]:not(.on):hover,.chip[data-tp]:not(.on):hover{border-color:#9dbcf2;color:#1d4ed8}
+/* la fila del tecnico abierto, en el mismo azul muy suave */
+.qb-tabla tr.tec.abierta td{background:#f0f6ff}
 </style>
 </head>
 <body>
