@@ -172,6 +172,9 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .cul-sus{background:var(--gris)}
 .qb-est .est{cursor:default}
 .chip.qb-mes{text-transform:capitalize}
+.qb-tipos{margin-bottom:12px}
+.qb-tipos .qb-cuenta{font-size:12.5px;color:var(--tenue);margin-left:8px}
+.qb-tipos .qb-cuenta b{color:var(--ink)}
 .qb-caja{overflow-x:auto}
 .qb-tabla{width:100%;min-width:760px;border-collapse:collapse;font-size:13px}
 .qb-tabla th{text-align:right;font-size:10px;letter-spacing:.6px;text-transform:uppercase;
@@ -850,12 +853,13 @@ const QB_RESP = {
    reparaciones, modificaciones, upgrade y downgrade. Para volver a contar
    todo, dejar la lista vacia: []. */
 const QB_TIPOS = ['ALTA', 'MIGRAC'];
-/* Botones Todo / Altas / Migraciones (30-09-2026, pedido de Luis), en el
-   recuadro "Por tecnico". Filtran TODA la vista (tarjetas, barra de quien,
-   tabla, detalle y resumen copiado), para que los numeros de arriba y los
-   de la tabla siempre sean de lo mismo. "Todo" = altas + migraciones: las
-   reparaciones siguen fuera. */
+/* Botones Todo / Altas / Migraciones (30-09-2026, pedido de Luis). Primero
+   iban en el recuadro "Por tecnico" y filtraban toda la vista; el mismo dia
+   se movieron al DETALLE de cada tecnico (ver detalleTecnico). tipoQb queda
+   siempre en 'todo' para la vista general; tipoDetQb es el del detalle.
+   "Todo" = altas + migraciones: las reparaciones siguen fuera. */
 let tipoQb = 'todo';                    // 'todo' | 'ALTA' | 'MIGRAC'
+let tipoDetQb = 'todo';                 // el mismo filtro, pero solo del detalle abierto
 const QB_BOTONES_TIPO = [['todo','Todo'], ['ALTA','Altas'], ['MIGRAC','Migraciones']];
 function tipoQuiebre(r){
   const T = String(r['Tipo de Actividad'] || '').trim().toUpperCase();
@@ -1043,10 +1047,7 @@ function pintarQuiebres(semanas){
   h += '<div class="caja qb-caja"><h2>Por técnico <span class="chico">toca un técnico para ver sus quiebres uno por uno</span></h2>'
     + '<div class="fila-f"><span class="et">Ordenar por</span>'
     + '<button class="chip'+(ordenQb==='q'?' on':'')+'" data-oq="q">Cantidad de quiebres</button>'
-    + '<button class="chip'+(ordenQb==='p'?' on':'')+'" data-oq="p">% de quiebre</button></div>'
-    + '<div class="fila-f"><span class="et">Actividad</span>'
-    + QB_BOTONES_TIPO.map(([k,l]) => '<button class="chip'+(tipoQb===k?' on':'')+'" data-tp="'+k+'">'+l+'</button>').join('')
-    + '</div>';
+    + '<button class="chip'+(ordenQb==='p'?' on':'')+'" data-oq="p">% de quiebre</button></div>';
   if(!tecs.length){
     h += '<div class="vacio">Sin órdenes de técnicos propios en esta selección.</div></div>';
   } else {
@@ -1094,25 +1095,38 @@ function pintarQuiebres(semanas){
     supQb = b.dataset.su || null; abiertoQb = null; pintarQuiebres(semanas); }));
   document.querySelectorAll('.chip[data-oq]').forEach(b => b.addEventListener('click', () => {
     ordenQb = b.dataset.oq; pintarQuiebres(semanas); }));
-  document.querySelectorAll('.chip[data-tp]').forEach(b => b.addEventListener('click', () => {
-    tipoQb = b.dataset.tp; pintarQuiebres(semanas); }));
+  document.querySelectorAll('.chip[data-tp]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation(); tipoDetQb = b.dataset.tp;
+    const y = window.scrollY; pintarQuiebres(semanas); window.scrollTo(0, y); }));
   document.querySelectorAll('tr.tec').forEach(f => f.addEventListener('click', () => {
     abiertoQb = abiertoQb === f.dataset.tq ? null : f.dataset.tq;
+    tipoDetQb = 'todo';
     const y = window.scrollY; pintarQuiebres(semanas); window.scrollTo(0, y); }));
   const bc = document.getElementById('qb-copiar');
   if(bc) bc.addEventListener('click', e => { e.stopPropagation(); copiarQuiebres(bc); });
 }
 
 /* Detalle que se abre bajo cada tecnico. */
-function detalleTecnico(o, semanas){
-  /* sus ultimas semanas, para ver si esta semana es normal en el o no */
-  const previas = semanas.slice(semanas.indexOf(semQb), semanas.indexOf(semQb) + 6).reverse();
-  const hist = previas.map(k => {
-    const x = calcularQuiebres(k, null).find(t => t.tec === o.tec);
-    return x ? (k === semQb ? '<b>' : '') + 'Sem '+numSemana(k)+': '+nfQ(x.pq)+'% ('+x.q+' de '+x.asig+')'
-             + (k === semQb ? '</b>' : '') : null;
-  }).filter(Boolean);
-  let h = '<div class="qb-hist">Últimas semanas: '+hist.join(' · ')+'</div>';
+/* (30-09-2026, Luis) Se saco la linea "Ultimas semanas" y en su lugar van
+   los botones Todo / Altas / Migraciones de ESE tecnico: cambian solo su
+   detalle (motivos, lista y resumen copiado), no la tabla. La tabla y las
+   tarjetas cuentan siempre altas + migraciones. Al abrir otro tecnico
+   vuelve a "Todo". */
+function detalleTecnico(oTodo, semanas){
+  let o = oTodo;
+  if(tipoDetQb !== 'todo'){
+    const antes = tipoQb; tipoQb = tipoDetQb;
+    o = calcularQuiebres(semQb, supQb).find(t => t.tec === oTodo.tec)
+        || {tec:oTodo.tec, sup:oTodo.sup, asig:0, comp:0, q:0, pq:0, recup:0,
+            resp:{cliente:0, mandante:0, empresa:0, susp:0},
+            mot:{cliente:{}, mandante:{}, empresa:{}, susp:{}}, filas:[]};
+    tipoQb = antes;
+  }
+  let h = '<div class="fila-f qb-tipos">'
+    + QB_BOTONES_TIPO.map(([k,l]) => '<button class="chip'+(tipoDetQb===k?' on':'')+'" data-tp="'+k+'">'+l+'</button>').join('')
+    + '<span class="qb-cuenta">'+(o.asig
+        ? o.asig+' asignadas · '+o.comp+' completadas · <b>'+o.q+' quiebres ('+nfQ(o.pq)+'%)</b>'
+        : 'sin órdenes de este tipo en la semana')+'</span></div>';
 
   h += '<div class="qb-mot">';
   ['cliente','mandante','empresa','susp'].forEach(k => {
@@ -1146,8 +1160,11 @@ function detalleTecnico(o, semanas){
    por un tecnico. */
 function copiarQuiebres(boton){
   const o = window._qbSel; if(!o) return;
+  if(!o.asig) return;
+  const antes = tipoQb; tipoQb = tipoDetQb;          // el texto dice lo que se ve en el detalle
+  const tipos = textoTiposQb(); tipoQb = antes;
   const lin = ['Técnico: '+o.tec+' (supervisor '+o.sup+')',
-    'Semana '+numSemana(semQb)+', '+rangoSemana(semQb)+(QB_TIPOS.length || tipoQb !== 'todo' ? ' ('+textoTiposQb()+')' : ''),
+    'Semana '+numSemana(semQb)+', '+rangoSemana(semQb)+' ('+tipos+')',
     'Asignadas: '+o.asig+' · Completadas: '+o.comp+' ('+nfQ(100*o.comp/o.asig)+'%) · No ejecutadas: '+o.q];
   if(o.q){
     lin.push('', 'De las '+o.q+' no ejecutadas:');
