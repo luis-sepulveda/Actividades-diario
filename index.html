@@ -171,6 +171,7 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
    ============================================================ */
 .cul-sus{background:var(--gris)}
 .qb-est .est{cursor:default}
+.chip.qb-mes{text-transform:capitalize}
 .qb-caja{overflow-x:auto}
 .qb-tabla{width:100%;min-width:760px;border-collapse:collapse;font-size:13px}
 .qb-tabla th{text-align:right;font-size:10px;letter-spacing:.6px;text-transform:uppercase;
@@ -952,10 +953,28 @@ function calcularQuiebres(semana, sup){
 
 function nfQ(v){ return (Math.round(v*10)/10).toFixed(1).replace('.',','); }
 
+/* Semanas agrupadas por mes (30-09-2026, pedido de Luis): primero se elige
+   el mes y abajo salen sus semanas. Cada semana va al mes donde tiene MAS
+   DIAS CON DATOS, la misma regla del "Semana a semana" de Seguimiento.
+   Ej.: la del 28-09 al 03-10 es de septiembre mientras solo tenga 28 y 29;
+   cuando octubre tenga mas dias cargados, se pasa a octubre. En empate,
+   gana el mes mas nuevo. */
+let mesQb = null;
+let QB_MES_SEM = {};                    // semana -> 'aaaa-mm'
+function mesDeSemana(k){
+  const c = {};
+  new Set(FILAS.filter(r => claveSem(r['Fecha']) === k).map(r => r['Fecha']))
+    .forEach(f => { const m = claveMes(f); c[m] = (c[m] || 0) + 1; });
+  return Object.entries(c).sort((a,b) => b[1]-a[1] || b[0].localeCompare(a[0]))[0][0];
+}
+
 function verQuiebres(){
   mesSel = null; diaSel = null;
   const semanas = [...new Set(FILAS.map(r => claveSem(r['Fecha'])).filter(Boolean))].sort().reverse();
+  QB_MES_SEM = {};
+  semanas.forEach(k => QB_MES_SEM[k] = mesDeSemana(k));
   if(!semQb || semanas.indexOf(semQb) < 0) semQb = semanas[0];
+  mesQb = QB_MES_SEM[semQb];
   pintarQuiebres(semanas);
 }
 
@@ -977,9 +996,14 @@ function pintarQuiebres(semanas){
                       Object.keys(tot.resp).forEach(k => tot.resp[k] += o.resp[k]); });
 
   let h = '<div class="fila-f"><button class="btn" id="volver">← Meses</button></div>'
-    + '<div class="fila-f"><span class="et">Semana</span>'
-    + semanas.map(k => '<button class="chip'+(k===semQb?' on':'')+'" data-sq="'+k+'">Sem '
-        + numSemana(k)+' · '+rangoSemana(k).replace('del ','')+'</button>').join('')
+    + '<div class="fila-f"><span class="et">Mes</span>'
+    + [...new Set(semanas.map(k => QB_MES_SEM[k]))].sort().reverse()
+        .map(m => '<button class="chip qb-mes'+(m===mesQb?' on':'')+'" data-mq="'+m+'">'
+          + nombreMes(m)+'</button>').join('')
+    + '</div><div class="fila-f"><span class="et">Semana</span>'
+    + semanas.filter(k => QB_MES_SEM[k] === mesQb).sort()
+        .map(k => '<button class="chip'+(k===semQb?' on':'')+'" data-sq="'+k+'">Sem '
+          + numSemana(k)+' · '+rangoSemana(k).replace('del ','')+'</button>').join('')
     + '</div><div class="fila-f"><span class="et">Supervisor</span>'
     + '<button class="chip'+(!supQb?' on':'')+'" data-su="">Todos</button>'
     + sups.map(s => '<button class="chip'+(supQb===s?' on':'')+'" data-su="'+esc(s)+'">'+esc(s)+'</button>').join('')
@@ -1061,6 +1085,11 @@ function pintarQuiebres(semanas){
   document.getElementById('volver').addEventListener('click', portada);
   document.querySelectorAll('.chip[data-sq]').forEach(b => b.addEventListener('click', () => {
     semQb = b.dataset.sq; abiertoQb = null; pintarQuiebres(semanas); }));
+  /* al cambiar de mes queda elegida su ultima semana */
+  document.querySelectorAll('.chip[data-mq]').forEach(b => b.addEventListener('click', () => {
+    mesQb = b.dataset.mq;
+    semQb = semanas.filter(k => QB_MES_SEM[k] === mesQb).sort().pop();
+    abiertoQb = null; pintarQuiebres(semanas); }));
   document.querySelectorAll('.chip[data-su]').forEach(b => b.addEventListener('click', () => {
     supQb = b.dataset.su || null; abiertoQb = null; pintarQuiebres(semanas); }));
   document.querySelectorAll('.chip[data-oq]').forEach(b => b.addEventListener('click', () => {
