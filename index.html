@@ -843,6 +843,19 @@ const QB_RESP = {
   empresa : {l:'De Dominion',            c:'Dominion',   cl:'nos', css:'cul-nos'},
   susp    : {l:'Suspendidas sin cerrar', c:'Suspendida', cl:'sus', css:'cul-sus'}
 };
+/* Solo altas y migraciones (30-09-2026, pedido de Luis): es lo que mide
+   VTR/CLARO en los quiebres. Entran los tipos que EMPIEZAN con estas
+   palabras, asi que "Alta" incluye "Alta Traslado". Quedan fuera
+   reparaciones, modificaciones, upgrade y downgrade. Para volver a contar
+   todo, dejar la lista vacia: []. */
+const QB_TIPOS = ['ALTA', 'MIGRAC'];
+function tipoQuiebre(r){
+  if(!QB_TIPOS.length) return true;
+  const T = String(r['Tipo de Actividad'] || '').trim().toUpperCase();
+  return QB_TIPOS.some(k => T.indexOf(k) === 0);
+}
+const QB_TEXTO_TIPOS = 'solo altas y migraciones';
+
 /* Con este % de quiebre o mas, el numero de la tabla sale en rojo. */
 const QB_ALTO = 40;
 
@@ -901,6 +914,7 @@ function calcularQuiebres(semana, sup){
   const t = {};
   FILAS.forEach(r => {
     if(claveSem(r['Fecha']) !== semana) return;
+    if(!tipoQuiebre(r)) return;
     const tec = tecCorto(r['Nombre']); if(!tec) return;
     if(sup && r['supervisor'] !== sup) return;
     const o = t[tec] = t[tec] || {tec, sups:{}, asig:0, comp:0, q:0,
@@ -940,7 +954,8 @@ function pintarQuiebres(semanas){
                     .sort((a,b) => ordenDia(a).localeCompare(ordenDia(b))).pop() || '';
   const enCurso = semQb === semanas[0];
   document.getElementById('subtitulo').textContent = 'Semana ' + numSemana(semQb) + ', '
-    + rangoSemana(semQb) + (enCurso ? ' · en curso, con datos hasta el ' + ultimoDia.slice(0,5) : '');
+    + rangoSemana(semQb) + (enCurso ? ' · en curso, con datos hasta el ' + ultimoDia.slice(0,5) : '')
+    + (QB_TIPOS.length ? ' · ' + QB_TEXTO_TIPOS : '');
 
   const sups = [...new Set(FILAS.map(r => r['supervisor']).filter(Boolean))].sort();
   const tecs = calcularQuiebres(semQb, supQb);
@@ -1018,7 +1033,9 @@ function pintarQuiebres(semanas){
     h += '</tbody></table></div>';
   }
 
-  h += '<div class="caja qb-nota"><b>Cómo se cuenta.</b> Asignadas son todas las órdenes del técnico en la semana '
+  h += '<div class="caja qb-nota"><b>Cómo se cuenta.</b> '
+    + (QB_TIPOS.length ? 'Solo altas (incluye Alta Traslado) y migraciones; reparaciones y modificaciones no entran. ' : '')
+    + 'Asignadas son todas las órdenes del técnico en la semana '
     + '(lunes a sábado), una por orden y día: la que se reagenda y vuelve otro día cuenta de nuevo ese día. '
     + 'Quiebre es toda orden que no terminó completada. Las de Falla Aprovisionamiento derivadas a GSA cuentan '
     + 'como completadas. Las canceladas van a VTR/CLARO porque se cancelan en su sistema. '
@@ -1085,7 +1102,7 @@ function detalleTecnico(o, semanas){
 function copiarQuiebres(boton){
   const o = window._qbSel; if(!o) return;
   const lin = ['Técnico: '+o.tec+' (supervisor '+o.sup+')',
-    'Semana '+numSemana(semQb)+', '+rangoSemana(semQb),
+    'Semana '+numSemana(semQb)+', '+rangoSemana(semQb)+(QB_TIPOS.length ? ' ('+QB_TEXTO_TIPOS+')' : ''),
     'Asignadas: '+o.asig+' · Completadas: '+o.comp+' ('+nfQ(100*o.comp/o.asig)+'%) · No ejecutadas: '+o.q];
   if(o.q){
     lin.push('', 'De las '+o.q+' no ejecutadas:');
