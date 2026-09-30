@@ -162,6 +162,52 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 .tdet tr:nth-child(even) td{background:var(--zebra)}
 .tdet .ot{font-family:ui-monospace,Menlo,monospace;font-size:11.5px;white-space:nowrap}
 .tdet .dir{color:var(--tenue);font-size:12px}
+
+/* ============================================================
+   QUIEBRES POR TECNICO (30-09-2026)
+   Vista semanal que se abre con el boton "Quiebres por técnico"
+   de la portada. Para revertir: borrar este bloque, el bloque JS
+   QUIEBRES y el boton btn-qb de portada().
+   ============================================================ */
+.cul-sus{background:var(--gris)}
+.qb-est .est{cursor:default}
+.qb-caja{overflow-x:auto}
+.qb-tabla{width:100%;min-width:760px;border-collapse:collapse;font-size:13px}
+.qb-tabla th{text-align:right;font-size:10px;letter-spacing:.6px;text-transform:uppercase;
+             color:var(--debil);font-weight:700;padding:6px 8px;border-bottom:1px solid var(--linea);
+             white-space:nowrap}
+.qb-tabla th:first-child,.qb-tabla th.iz{text-align:left}
+.qb-tabla td{padding:8px 8px;border-bottom:1px solid var(--linea);text-align:right;white-space:nowrap}
+.qb-tabla td.iz{text-align:left}
+.qb-tabla tr.tec{cursor:pointer}
+.qb-tabla tr.tec:hover td{background:var(--zebra)}
+.qb-tabla tr.tec.abierta td{background:var(--panel2)}
+.qb-tabla td.nom{font-weight:600}
+.qb-tabla td.nom small{display:block;font-weight:400;color:var(--debil);font-size:11px}
+.qb-tabla td.q{font-weight:700;color:var(--mal-texto)}
+.qb-tabla td.pq b{font-weight:700}
+.qb-tabla td.pq.alto b{color:var(--mal-texto)}
+.qb-mini{display:flex;height:12px;width:120px;border-radius:3px;overflow:hidden;background:var(--panel2)}
+.qb-mini span{display:block;height:100%}
+.qb-tabla td.cli{color:#475569} .qb-tabla td.man{color:#6d28d9} .qb-tabla td.nos{color:var(--mal-texto);font-weight:700}
+.qb-tabla td.cero{color:var(--debil);font-weight:400}
+.qb-det td{background:#fbfcfd;padding:12px 14px 16px;text-align:left;white-space:normal}
+.qb-hist{font-size:12.5px;color:var(--tenue);margin-bottom:10px}
+.qb-hist b{color:var(--ink)}
+.qb-mot{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-bottom:6px}
+.qb-mot .g{background:var(--panel);border:1px solid var(--linea);border-left:4px solid var(--linea);
+           border-radius:9px;padding:9px 12px;font-size:12.5px}
+.qb-mot .g.cli{border-left-color:#94a3b8} .qb-mot .g.man{border-left-color:#7c3aed}
+.qb-mot .g.nos{border-left-color:var(--mal)} .qb-mot .g.sus{border-left-color:var(--gris)}
+.qb-mot .g .t{font-weight:700;margin-bottom:4px}
+.qb-mot .g div.m{display:flex;justify-content:space-between;color:var(--tenue);padding:1px 0}
+.qb-acc{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0 2px}
+.qb-acc .ok{font-size:12px;color:var(--ok)}
+.qb-tabla .tdet td{white-space:normal;text-align:left}
+.qb-tabla .tdet th{text-align:left}
+.qb-tabla .tdet .desp{color:var(--ok);font-size:11.5px}
+.qb-nota{font-size:12px;color:var(--tenue);line-height:1.5}
+.qb-nota b{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -257,6 +303,7 @@ function portada(){
   });
   h += '</div>'
     + '<div class="otras"><span class="et">También:</span>'
+    + '<button id="btn-qb">Quiebres por técnico</button>'
     + '<button id="btn-rep">Direcciones repetidas</button>'
     + '<a href="pantalla.html">Vista de pantalla</a>'
     + '</div>';
@@ -265,6 +312,8 @@ function portada(){
     e.addEventListener('click', () => { mesSel = e.dataset.m; diaSel = null; estSel = 'Completado'; verMes(); }));
   const br = document.getElementById('btn-rep');
   if(br) br.addEventListener('click', verRepetidas);
+  const bq = document.getElementById('btn-qb');
+  if(bq) bq.addEventListener('click', verQuiebres);
 }
 
 /* ================= DIRECCIONES REPETIDAS =================
@@ -750,6 +799,306 @@ function tablaDetalle(grupo, filas){
       + '<td>'+esc(f.e || '')+'</td></tr>';
   });
   return h + '</tbody></table>';
+}
+
+/* ================= QUIEBRES POR TECNICO (30-09-2026) =================
+   Pedido de Luis: VTR/CLARO mide los quiebres por tecnico ("le cargamos
+   100 actividades y ejecuto 50, que paso con las otras"). Esta vista
+   responde esa pregunta semana a semana, con numeros y orden por orden.
+
+   Definiciones (las mismas del resto del dashboard):
+   - Asignadas: todas las ordenes del tecnico en la semana, UNA por orden y
+     dia (generar_csv.py ya deja el estado final). Una orden que se
+     reagenda y vuelve otro dia cuenta de nuevo ese dia, igual que en la
+     efectividad.
+   - Quiebre: toda orden que no termino Completada (No Realizada,
+     Cancelada o Suspendida). La regla GSA ya viene aplicada: esas cuentan
+     como Completado.
+   - Semana: de lunes a sabado, la misma que usa VTR/CLARO para el 50% de
+     sin moradores. Si algun domingo trae ordenes, suma a su semana.
+   - Tecnico: nombre corto, lo que va despues de "_DOMI_". Asi se juntan
+     los que aparecen con dos prefijos (MM_ y QA_MM_). Las filas sin
+     "_DOMI_" (buckets) no entran.
+
+   De quien es cada quiebre: las No Realizadas usan culpaDe(), el mismo
+   criterio del panel "De quien fue la caida". Las Canceladas van a
+   VTR/CLARO: se cancelan en su sistema, el tecnico no cancela. Las
+   Suspendidas van aparte: es un estado que VTR/CLARO no alcanzo a cerrar.
+
+   "Se completo otro dia": la misma OT aparece Completada en una fecha
+   posterior (con cualquier tecnico). Es el argumento de que el trabajo no
+   se perdio, solo se movio de dia.
+
+   Limite conocido: el export dice quien tenia la orden AL FINAL del dia.
+   Si VTR/CLARO le movio una orden a otro tecnico, aqui cuenta para el
+   que la termino, no para el que la tenia en la manana. Para medir eso
+   haria falta cruzar con el Excel de inicio de jornada (pendiente).
+   =================================================================== */
+const MES_CORTO = ['ene','feb','mar','abr','may','jun','jul','ago','sept','oct','nov','dic'];
+const QB_RESP = {
+  cliente : {l:'Del cliente',            c:'Cliente',    cl:'cli', css:'cul-cli'},
+  mandante: {l:'De VTR/CLARO',           c:'VTR/CLARO',  cl:'man', css:'cul-man'},
+  empresa : {l:'De Dominion',            c:'Dominion',   cl:'nos', css:'cul-nos'},
+  susp    : {l:'Suspendidas sin cerrar', c:'Suspendida', cl:'sus', css:'cul-sus'}
+};
+/* Con este % de quiebre o mas, el numero de la tabla sale en rojo. */
+const QB_ALTO = 40;
+
+let semQb = null, supQb = null, ordenQb = 'q', abiertoQb = null;
+let QB_OT = null;   // OT -> fechas (aaaammdd) en que salio Completada
+
+function fechaD(f){ const p = partes(f); return p ? new Date(+p[2], +p[1]-1, +p[0]) : null; }
+function claveSem(f){
+  const d = fechaD(f); if(!d) return null;
+  d.setDate(d.getDate() - (d.getDay()+6)%7);          // lunes de esa semana
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function numSemana(k){
+  /* semana ISO, la misma "Sem 39" del reporte de Seguimiento */
+  const p = k.split('-'), d = new Date(+p[0], +p[1]-1, +p[2]);
+  d.setDate(d.getDate() + 3);                         // jueves de esa semana
+  const ene4 = new Date(d.getFullYear(), 0, 4);
+  return 1 + Math.round(((d - ene4)/86400000 - 3 + (ene4.getDay()+6)%7) / 7);
+}
+function rangoSemana(k){
+  const p = k.split('-'), a = new Date(+p[0], +p[1]-1, +p[2]);
+  const b = new Date(a); b.setDate(a.getDate() + 5);  // sabado
+  return a.getMonth() === b.getMonth()
+    ? 'del '+a.getDate()+' al '+b.getDate()+' '+MES_CORTO[b.getMonth()]
+    : 'del '+a.getDate()+' '+MES_CORTO[a.getMonth()]+' al '+b.getDate()+' '+MES_CORTO[b.getMonth()];
+}
+function tecCorto(n){
+  const s = String(n || ''), i = s.indexOf('_DOMI_');
+  return i >= 0 ? s.slice(i + 6).trim() : null;
+}
+function respQuiebre(r){
+  if(r['Estado'] === 'Cancelado')  return 'mandante';
+  if(r['Estado'] === 'Suspendido') return 'susp';
+  return culpaDe(r['Código de Cierre']);
+}
+function motivoQuiebre(r){
+  const c = String(r['Código de Cierre'] || '').trim();
+  if(r['Estado'] === 'Cancelado')
+    return !c ? 'Cancelada' : c.toLowerCase().indexOf('cancel') >= 0 ? c : 'Cancelada · '+c;
+  if(r['Estado'] === 'Suspendido') return 'Suspendida';
+  return c || 'Sin código';
+}
+function completadaDespues(r){
+  if(!QB_OT){
+    QB_OT = {};
+    FILAS.forEach(x => { if(x['Estado'] === 'Completado'){
+      const o = x['Orden de Trabajo']; (QB_OT[o] = QB_OT[o] || []).push(ordenDia(x['Fecha'])); } });
+  }
+  const hoy = ordenDia(r['Fecha']);
+  const l = (QB_OT[r['Orden de Trabajo']] || []).filter(f => f > hoy).sort();
+  return l.length ? l[0].slice(6,8)+'-'+l[0].slice(4,6) : null;
+}
+
+/* Arma la tabla de una semana: un objeto por tecnico. */
+function calcularQuiebres(semana, sup){
+  const t = {};
+  FILAS.forEach(r => {
+    if(claveSem(r['Fecha']) !== semana) return;
+    const tec = tecCorto(r['Nombre']); if(!tec) return;
+    if(sup && r['supervisor'] !== sup) return;
+    const o = t[tec] = t[tec] || {tec, sups:{}, asig:0, comp:0, q:0,
+                                  resp:{cliente:0, mandante:0, empresa:0, susp:0},
+                                  mot:{cliente:{}, mandante:{}, empresa:{}, susp:{}},
+                                  filas:[], recup:0};
+    o.asig++;
+    o.sups[r['supervisor'] || '—'] = (o.sups[r['supervisor'] || '—'] || 0) + 1;
+    if(r['Estado'] === 'Completado'){ o.comp++; return; }
+    o.q++;
+    const k = respQuiebre(r), m = motivoQuiebre(r);
+    o.resp[k]++;
+    o.mot[k][m] = (o.mot[k][m] || 0) + 1;
+    const desp = completadaDespues(r);
+    if(desp) o.recup++;
+    o.filas.push({r, k, m, desp});
+  });
+  return Object.values(t).map(o => {
+    o.sup = Object.entries(o.sups).sort((a,b) => b[1]-a[1])[0][0];
+    o.pq = o.asig ? 100*o.q/o.asig : 0;
+    return o;
+  });
+}
+
+function nfQ(v){ return (Math.round(v*10)/10).toFixed(1).replace('.',','); }
+
+function verQuiebres(){
+  mesSel = null; diaSel = null;
+  const semanas = [...new Set(FILAS.map(r => claveSem(r['Fecha'])).filter(Boolean))].sort().reverse();
+  if(!semQb || semanas.indexOf(semQb) < 0) semQb = semanas[0];
+  pintarQuiebres(semanas);
+}
+
+function pintarQuiebres(semanas){
+  document.getElementById('titulo').textContent = 'Quiebres por técnico';
+  const ultimoDia = [...new Set(FILAS.filter(r => claveSem(r['Fecha']) === semQb).map(r => r['Fecha']))]
+                    .sort((a,b) => ordenDia(a).localeCompare(ordenDia(b))).pop() || '';
+  const enCurso = semQb === semanas[0];
+  document.getElementById('subtitulo').textContent = 'Semana ' + numSemana(semQb) + ', '
+    + rangoSemana(semQb) + (enCurso ? ' · en curso, con datos hasta el ' + ultimoDia.slice(0,5) : '');
+
+  const sups = [...new Set(FILAS.map(r => r['supervisor']).filter(Boolean))].sort();
+  const tecs = calcularQuiebres(semQb, supQb);
+  tecs.sort(ordenQb === 'p' ? (a,b) => b.pq - a.pq || b.q - a.q : (a,b) => b.q - a.q || b.pq - a.pq);
+
+  const tot = {asig:0, comp:0, q:0, recup:0, resp:{cliente:0, mandante:0, empresa:0, susp:0}};
+  tecs.forEach(o => { tot.asig += o.asig; tot.comp += o.comp; tot.q += o.q; tot.recup += o.recup;
+                      Object.keys(tot.resp).forEach(k => tot.resp[k] += o.resp[k]); });
+
+  let h = '<div class="fila-f"><button class="btn" id="volver">← Meses</button></div>'
+    + '<div class="fila-f"><span class="et">Semana</span>'
+    + semanas.map(k => '<button class="chip'+(k===semQb?' on':'')+'" data-sq="'+k+'">Sem '
+        + numSemana(k)+' · '+rangoSemana(k).replace('del ','')+'</button>').join('')
+    + '</div><div class="fila-f"><span class="et">Supervisor</span>'
+    + '<button class="chip'+(!supQb?' on':'')+'" data-su="">Todos</button>'
+    + sups.map(s => '<button class="chip'+(supQb===s?' on':'')+'" data-su="'+esc(s)+'">'+esc(s)+'</button>').join('')
+    + '</div>';
+
+  /* tarjetas del total de la semana */
+  h += '<div class="estados qb-est">'
+    + '<div class="est"><div class="n">'+tot.asig.toLocaleString('es-CL')+'</div><div class="l">Asignadas</div>'
+    +   '<div class="p">'+tecs.length+' técnicos</div></div>'
+    + '<div class="est comp"><div class="n">'+tot.comp.toLocaleString('es-CL')+'</div><div class="l">Completadas</div>'
+    +   '<div class="p">'+pc(tot.comp, tot.asig)+' de las asignadas</div></div>'
+    + '<div class="est nore"><div class="n">'+tot.q.toLocaleString('es-CL')+'</div><div class="l">Quiebres</div>'
+    +   '<div class="p">'+pc(tot.q, tot.asig)+' de las asignadas</div></div>'
+    + '<div class="est"><div class="n" style="color:var(--mal-texto)">'+tot.resp.empresa+'</div>'
+    +   '<div class="l">Quiebres de Dominion</div><div class="p">'+pc(tot.resp.empresa, tot.q)+' de los quiebres</div></div>'
+    + '</div>';
+
+  /* de quien son los quiebres de la semana */
+  if(tot.q){
+    const seg = k => tot.resp[k] ? '<span class="'+QB_RESP[k].css+'" style="width:'+(100*tot.resp[k]/tot.q)+'%">'
+      + (100*tot.resp[k]/tot.q >= 8 ? pc(tot.resp[k], tot.q) : '')+'</span>' : '';
+    const fila = (k, sub) => tot.resp[k] || k !== 'susp' ? '<div class="f"><span class="pt '+QB_RESP[k].css+'"></span>'
+      + '<span class="tx">'+QB_RESP[k].l+'<small>'+sub+'</small></span>'
+      + '<span class="vv">'+tot.resp[k]+'</span><span class="pp">'+pc(tot.resp[k], tot.q)+'</span></div>' : '';
+    h += '<div class="caja"><h2>De quién son los quiebres <span class="chico">'+tot.q+' en la semana · '
+      + tot.recup+' se completaron otro día</span></h2>'
+      + '<div class="culpa">'+seg('cliente')+seg('mandante')+seg('empresa')+seg('susp')+'</div>'
+      + '<div class="cul-lista">'
+      + fila('cliente', 'sin moradores, reagenda, desiste, sin acceso')
+      + fila('mandante', 'red, datos mal ingresados y órdenes canceladas en su sistema')
+      + fila('empresa', 'falta de dotación y códigos que no calzan en lo anterior: revisar')
+      + fila('susp', 'quedaron suspendidas, VTR/CLARO no las cerró')
+      + '</div></div>';
+  }
+
+  /* tabla por tecnico */
+  h += '<div class="caja qb-caja"><h2>Por técnico <span class="chico">toca un técnico para ver sus quiebres uno por uno</span></h2>'
+    + '<div class="fila-f"><span class="et">Ordenar por</span>'
+    + '<button class="chip'+(ordenQb==='q'?' on':'')+'" data-oq="q">Cantidad de quiebres</button>'
+    + '<button class="chip'+(ordenQb==='p'?' on':'')+'" data-oq="p">% de quiebre</button></div>';
+  if(!tecs.length){
+    h += '<div class="vacio">Sin órdenes de técnicos propios en esta selección.</div></div>';
+  } else {
+    h += '<table class="qb-tabla"><thead><tr><th>Técnico</th><th>Asignadas</th><th>Completadas</th>'
+      + '<th>Quiebres</th><th>% quiebre</th><th class="iz">De quién</th><th>Cliente</th>'
+      + '<th>VTR/CLARO</th><th>Dominion</th></tr></thead><tbody>';
+    tecs.forEach((o, i) => {
+      const mini = ['cliente','mandante','empresa','susp'].map(k => o.resp[k]
+        ? '<span class="'+QB_RESP[k].css+'" style="width:'+(100*o.resp[k]/Math.max(o.q,1))+'%"></span>' : '').join('');
+      const abierta = abiertoQb === o.tec;
+      h += '<tr class="tec'+(abierta?' abierta':'')+'" data-tq="'+esc(o.tec)+'">'
+        + '<td class="iz nom">'+esc(o.tec)+'<small>'+esc(o.sup)+'</small></td>'
+        + '<td>'+o.asig+'</td><td>'+o.comp+'</td>'
+        + '<td class="q">'+o.q+'</td>'
+        + '<td class="pq'+(o.pq >= QB_ALTO ? ' alto' : '')+'"><b>'+nfQ(o.pq)+'%</b></td>'
+        + '<td class="iz"><div class="qb-mini">'+mini+'</div></td>'
+        + '<td class="cli'+(o.resp.cliente?'':' cero')+'">'+o.resp.cliente+'</td>'
+        + '<td class="man'+(o.resp.mandante?'':' cero')+'">'+o.resp.mandante+'</td>'
+        + '<td class="nos'+(o.resp.empresa?'':' cero')+'">'+o.resp.empresa+'</td></tr>';
+      if(abierta) h += '<tr class="qb-det"><td colspan="9">'+detalleTecnico(o, semanas)+'</td></tr>';
+    });
+    h += '</tbody></table></div>';
+  }
+
+  h += '<div class="caja qb-nota"><b>Cómo se cuenta.</b> Asignadas son todas las órdenes del técnico en la semana '
+    + '(lunes a sábado), una por orden y día: la que se reagenda y vuelve otro día cuenta de nuevo ese día. '
+    + 'Quiebre es toda orden que no terminó completada. Las de Falla Aprovisionamiento derivadas a GSA cuentan '
+    + 'como completadas. Las canceladas van a VTR/CLARO porque se cancelan en su sistema. '
+    + '"Otro día" son los quiebres cuya misma orden se completó en una fecha posterior. '
+    + 'El export dice quién tenía la orden al cierre del día: si VTR/CLARO movió una orden a otro técnico, '
+    + 'cuenta para el que la tenía al final.</div>';
+
+  document.getElementById('vista').innerHTML = h;
+  document.getElementById('volver').addEventListener('click', portada);
+  document.querySelectorAll('.chip[data-sq]').forEach(b => b.addEventListener('click', () => {
+    semQb = b.dataset.sq; abiertoQb = null; pintarQuiebres(semanas); }));
+  document.querySelectorAll('.chip[data-su]').forEach(b => b.addEventListener('click', () => {
+    supQb = b.dataset.su || null; abiertoQb = null; pintarQuiebres(semanas); }));
+  document.querySelectorAll('.chip[data-oq]').forEach(b => b.addEventListener('click', () => {
+    ordenQb = b.dataset.oq; pintarQuiebres(semanas); }));
+  document.querySelectorAll('tr.tec').forEach(f => f.addEventListener('click', () => {
+    abiertoQb = abiertoQb === f.dataset.tq ? null : f.dataset.tq;
+    const y = window.scrollY; pintarQuiebres(semanas); window.scrollTo(0, y); }));
+  const bc = document.getElementById('qb-copiar');
+  if(bc) bc.addEventListener('click', e => { e.stopPropagation(); copiarQuiebres(bc); });
+}
+
+/* Detalle que se abre bajo cada tecnico. */
+function detalleTecnico(o, semanas){
+  /* sus ultimas semanas, para ver si esta semana es normal en el o no */
+  const previas = semanas.slice(semanas.indexOf(semQb), semanas.indexOf(semQb) + 6).reverse();
+  const hist = previas.map(k => {
+    const x = calcularQuiebres(k, null).find(t => t.tec === o.tec);
+    return x ? (k === semQb ? '<b>' : '') + 'Sem '+numSemana(k)+': '+nfQ(x.pq)+'% ('+x.q+' de '+x.asig+')'
+             + (k === semQb ? '</b>' : '') : null;
+  }).filter(Boolean);
+  let h = '<div class="qb-hist">Últimas semanas: '+hist.join(' · ')+'</div>';
+
+  h += '<div class="qb-mot">';
+  ['cliente','mandante','empresa','susp'].forEach(k => {
+    if(!o.resp[k]) return;
+    h += '<div class="g '+QB_RESP[k].cl+'"><div class="t">'+QB_RESP[k].l+': '+o.resp[k]+'</div>'
+      + Object.entries(o.mot[k]).sort((a,b) => b[1]-a[1])
+          .map(([m,v]) => '<div class="m"><span>'+esc(m)+'</span><span>'+v+'</span></div>').join('')
+      + '</div>';
+  });
+  h += '</div>';
+
+  h += '<div class="qb-acc"><button class="btn" id="qb-copiar">Copiar resumen para responder</button></div>';
+  window._qbSel = o;
+
+  const filas = o.filas.slice().sort((a,b) => ordenDia(a.r['Fecha']).localeCompare(ordenDia(b.r['Fecha'])));
+  h += '<table class="tdet"><thead><tr><th>Fecha</th><th>OT</th><th>Actividad</th><th>Franja</th>'
+    + '<th>Motivo</th><th>De quién</th><th>Otro día</th></tr></thead><tbody>';
+  filas.forEach(f => {
+    h += '<tr><td>'+esc(f.r['Fecha'].slice(0,5))+'</td>'
+      + '<td class="ot">'+esc(f.r['Orden de Trabajo'] || '')+'</td>'
+      + '<td>'+esc(categoria(f.r))+'</td>'
+      + '<td>'+esc(f.r['Franja'] || '')+'</td>'
+      + '<td>'+esc(f.m)+'</td>'
+      + '<td>'+QB_RESP[f.k].c+'</td>'
+      + '<td class="desp">'+(f.desp ? 'completada el '+f.desp : '')+'</td></tr>';
+  });
+  return h + '</tbody></table>';
+}
+
+/* Texto listo para pegar en un correo o WhatsApp cuando VTR/CLARO pregunta
+   por un tecnico. */
+function copiarQuiebres(boton){
+  const o = window._qbSel; if(!o) return;
+  const lin = ['Técnico: '+o.tec+' (supervisor '+o.sup+')',
+    'Semana '+numSemana(semQb)+', '+rangoSemana(semQb),
+    'Asignadas: '+o.asig+' · Completadas: '+o.comp+' ('+nfQ(100*o.comp/o.asig)+'%) · No ejecutadas: '+o.q];
+  if(o.q){
+    lin.push('', 'De las '+o.q+' no ejecutadas:');
+    ['cliente','mandante','empresa','susp'].forEach(k => {
+      if(!o.resp[k]) return;
+      const det = Object.entries(o.mot[k]).sort((a,b) => b[1]-a[1]).map(([m,v]) => m+' '+v).join(', ');
+      lin.push('- '+QB_RESP[k].c+': '+o.resp[k]+' ('+det+')');
+    });
+    if(o.recup) lin.push('', o.recup+' de ellas se completaron otro día.');
+  }
+  const txt = lin.join('\n');
+  const listo = () => { boton.textContent = 'Copiado ✓'; setTimeout(() => boton.textContent = 'Copiar resumen para responder', 2000); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(listo, () => window.prompt('Copia este texto:', txt));
+  } else { window.prompt('Copia este texto:', txt); }
 }
 
 cargar();
