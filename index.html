@@ -595,8 +595,10 @@ function verMes(){
    con numero cuando preguntan por el porcentaje de no realizadas: la mayoria
    no son de la empresa.
 
-   - cliente : no estaba, reagenda, desiste. Nadie lo controla.
-   - mandante: VTR/Claro. Incluye la red (NAP, ductos, aprovisionamiento) y
+   - cliente : no estaba, reagenda, desiste, ductos tapados. Nadie lo
+               controla. Ductos tapados va aqui desde el 30-09-2026 (Luis):
+               el ducto es de la casa del cliente, no de la red de VTR/CLARO.
+   - mandante: VTR/Claro. Incluye la red (NAP, aprovisionamiento) y
                los datos mal ingresados por su area comercial (direccion
                incorrecta o no encontrada, nombre del cliente, etc).
    - empresa : lo unico que depende de nosotros (falta de dotacion).
@@ -604,8 +606,8 @@ function verMes(){
    Si aparece un codigo nuevo cae en 'empresa' a proposito, para que se note
    y se clasifique, en vez de esconderse en el saco de los demas. */
 const CULPA_CLIENTE  = ['sin moradores','reagenda','desiste','sin contacto',
-                        'sin acceso','sin apoyo','casa sin medidor'];
-const CULPA_MANDANTE = ['falla','nap','ducto','sin red','niveles','poste',
+                        'sin acceso','sin apoyo','casa sin medidor','ducto'];
+const CULPA_MANDANTE = ['falla','nap','sin red','niveles','poste',
                         'factible','masiva','contingencia','direccion',
                         'derivaci','ticket','zona roja','riesgo','mal generada'];
 
@@ -980,7 +982,7 @@ function pintarQuiebres(semanas){
       + tot.recup+' se completaron otro día</span></h2>'
       + '<div class="culpa">'+seg('cliente')+seg('mandante')+seg('empresa')+seg('susp')+'</div>'
       + '<div class="cul-lista">'
-      + fila('cliente', 'sin moradores, reagenda, desiste, sin acceso')
+      + fila('cliente', 'sin moradores, reagenda, desiste, sin acceso, ductos tapados')
       + fila('mandante', 'red, datos mal ingresados y órdenes canceladas en su sistema')
       + fila('empresa', 'falta de dotación y códigos que no calzan en lo anterior: revisar')
       + fila('susp', 'quedaron suspendidas, VTR/CLARO no las cerró')
