@@ -849,12 +849,23 @@ const QB_RESP = {
    reparaciones, modificaciones, upgrade y downgrade. Para volver a contar
    todo, dejar la lista vacia: []. */
 const QB_TIPOS = ['ALTA', 'MIGRAC'];
+/* Botones Todo / Altas / Migraciones (30-09-2026, pedido de Luis), en el
+   recuadro "Por tecnico". Filtran TODA la vista (tarjetas, barra de quien,
+   tabla, detalle y resumen copiado), para que los numeros de arriba y los
+   de la tabla siempre sean de lo mismo. "Todo" = altas + migraciones: las
+   reparaciones siguen fuera. */
+let tipoQb = 'todo';                    // 'todo' | 'ALTA' | 'MIGRAC'
+const QB_BOTONES_TIPO = [['todo','Todo'], ['ALTA','Altas'], ['MIGRAC','Migraciones']];
 function tipoQuiebre(r){
-  if(!QB_TIPOS.length) return true;
   const T = String(r['Tipo de Actividad'] || '').trim().toUpperCase();
+  if(tipoQb !== 'todo') return T.indexOf(tipoQb) === 0;
+  if(!QB_TIPOS.length) return true;
   return QB_TIPOS.some(k => T.indexOf(k) === 0);
 }
-const QB_TEXTO_TIPOS = 'solo altas y migraciones';
+function textoTiposQb(){
+  return tipoQb === 'ALTA' ? 'solo altas' : tipoQb === 'MIGRAC' ? 'solo migraciones'
+       : 'solo altas y migraciones';
+}
 
 /* Con este % de quiebre o mas, el numero de la tabla sale en rojo. */
 const QB_ALTO = 40;
@@ -955,7 +966,7 @@ function pintarQuiebres(semanas){
   const enCurso = semQb === semanas[0];
   document.getElementById('subtitulo').textContent = 'Semana ' + numSemana(semQb) + ', '
     + rangoSemana(semQb) + (enCurso ? ' · en curso, con datos hasta el ' + ultimoDia.slice(0,5) : '')
-    + (QB_TIPOS.length ? ' · ' + QB_TEXTO_TIPOS : '');
+    + (QB_TIPOS.length || tipoQb !== 'todo' ? ' · ' + textoTiposQb() : '');
 
   const sups = [...new Set(FILAS.map(r => r['supervisor']).filter(Boolean))].sort();
   const tecs = calcularQuiebres(semQb, supQb);
@@ -1008,7 +1019,10 @@ function pintarQuiebres(semanas){
   h += '<div class="caja qb-caja"><h2>Por técnico <span class="chico">toca un técnico para ver sus quiebres uno por uno</span></h2>'
     + '<div class="fila-f"><span class="et">Ordenar por</span>'
     + '<button class="chip'+(ordenQb==='q'?' on':'')+'" data-oq="q">Cantidad de quiebres</button>'
-    + '<button class="chip'+(ordenQb==='p'?' on':'')+'" data-oq="p">% de quiebre</button></div>';
+    + '<button class="chip'+(ordenQb==='p'?' on':'')+'" data-oq="p">% de quiebre</button></div>'
+    + '<div class="fila-f"><span class="et">Actividad</span>'
+    + QB_BOTONES_TIPO.map(([k,l]) => '<button class="chip'+(tipoQb===k?' on':'')+'" data-tp="'+k+'">'+l+'</button>').join('')
+    + '</div>';
   if(!tecs.length){
     h += '<div class="vacio">Sin órdenes de técnicos propios en esta selección.</div></div>';
   } else {
@@ -1051,6 +1065,8 @@ function pintarQuiebres(semanas){
     supQb = b.dataset.su || null; abiertoQb = null; pintarQuiebres(semanas); }));
   document.querySelectorAll('.chip[data-oq]').forEach(b => b.addEventListener('click', () => {
     ordenQb = b.dataset.oq; pintarQuiebres(semanas); }));
+  document.querySelectorAll('.chip[data-tp]').forEach(b => b.addEventListener('click', () => {
+    tipoQb = b.dataset.tp; pintarQuiebres(semanas); }));
   document.querySelectorAll('tr.tec').forEach(f => f.addEventListener('click', () => {
     abiertoQb = abiertoQb === f.dataset.tq ? null : f.dataset.tq;
     const y = window.scrollY; pintarQuiebres(semanas); window.scrollTo(0, y); }));
@@ -1102,7 +1118,7 @@ function detalleTecnico(o, semanas){
 function copiarQuiebres(boton){
   const o = window._qbSel; if(!o) return;
   const lin = ['Técnico: '+o.tec+' (supervisor '+o.sup+')',
-    'Semana '+numSemana(semQb)+', '+rangoSemana(semQb)+(QB_TIPOS.length ? ' ('+QB_TEXTO_TIPOS+')' : ''),
+    'Semana '+numSemana(semQb)+', '+rangoSemana(semQb)+(QB_TIPOS.length || tipoQb !== 'todo' ? ' ('+textoTiposQb()+')' : ''),
     'Asignadas: '+o.asig+' · Completadas: '+o.comp+' ('+nfQ(100*o.comp/o.asig)+'%) · No ejecutadas: '+o.q];
   if(o.q){
     lin.push('', 'De las '+o.q+' no ejecutadas:');
