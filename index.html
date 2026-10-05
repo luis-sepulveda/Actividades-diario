@@ -273,25 +273,30 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
 }
 
 /* ============================================================
-   QUIEBRES: COLOR POR FILA (30-09-2026, pedido de Luis)
-   Meses en celeste claro, semanas en verde claro, supervisores en
-   ambar claro. El elegido va en el mismo color, mas fuerte, con
-   borde marcado y el check. "Ordenar por" y Todo/Altas/Migraciones
-   siguen en blanco y azul. Va despues de "BOTONES DE SELECCION" y
-   lo pisa. Para volver a todo blanco: borrar este bloque.
+   QUIEBRES: FILTROS EN UN PANEL, BOTONES "CUADRADOS CON MARCA" (05-10-2026)
+   Pedido de Luis: que los botones se vean bien y COMBINEN con el resto
+   de la pagina. Eligio el estilo "F" entre doce ejemplos.
+   - Se quito el "color por fila" del 30-09 (meses celeste, semanas
+     verde, supervisores ambar): esos colores no existian en ninguna
+     otra parte y competian con el verde de completadas y el rojo de
+     quiebres.
+   - Mes, Semana y Supervisor van dentro de un panel blanco igual a los
+     demas (.caja.qb-filtros).
+   - Todos los botones de seleccion de Quiebres (mes, semana, supervisor,
+     "Ordenar por" y Todo/Altas/Migraciones) quedan iguales: rectos, con
+     una franja gris a la izquierda. El elegido: fondo azul claro, borde
+     y franja azul, letra azul en negrita. Sin check y sin brillo.
+   Va despues de "BOTONES DE SELECCION" y lo pisa. Para volver a los
+   botones redondeados con check: borrar las tres reglas .chip de abajo.
    ============================================================ */
-/* meses: celeste */
-.chip[data-mq]{background:#e8f7fd;border-color:#a9dcf1;color:#0c4a6e}
-.chip[data-mq]:not(.on):hover{border-color:#38bdf8;color:#075985;box-shadow:0 4px 10px rgba(14,165,233,.14)}
-.chip.on[data-mq]{background:#bfe8fb;border-color:#0ea5e9;color:#075985;box-shadow:0 0 0 3px rgba(14,165,233,.18)}
-/* semanas: verde */
-.chip[data-sq]{background:#ebf8ef;border-color:#aedcbb;color:#14532d}
-.chip[data-sq]:not(.on):hover{border-color:#4cc27a;color:#166534;box-shadow:0 4px 10px rgba(34,165,90,.14)}
-.chip.on[data-sq]{background:#c3efd0;border-color:#22a55a;color:#166534;box-shadow:0 0 0 3px rgba(34,165,90,.18)}
-/* supervisores: ambar */
-.chip[data-su]{background:#fef6e4;border-color:#f1d08e;color:#78350f}
-.chip[data-su]:not(.on):hover{border-color:#e8b33f;color:#92400e;box-shadow:0 4px 10px rgba(224,163,33,.16)}
-.chip.on[data-su]{background:#fde6ab;border-color:#e0a321;color:#92400e;box-shadow:0 0 0 3px rgba(224,163,33,.20)}
+.caja.qb-filtros{padding:14px 18px 6px;margin:0 0 4px}
+.caja.qb-filtros .fila-f:last-child{margin-bottom:8px}
+.chip[data-mq],.chip[data-sq],.chip[data-su],.chip[data-oq],.chip[data-tp]{
+  border-radius:4px;border-left:4px solid #b9c6d4;box-shadow:none}
+.chip.on[data-mq],.chip.on[data-sq],.chip.on[data-su],.chip.on[data-oq],.chip.on[data-tp]{
+  background:#eaf2ff;border-color:#1d4ed8;border-left-color:#1d4ed8;color:#1d4ed8;box-shadow:none}
+.chip.on[data-mq]::before,.chip.on[data-sq]::before,.chip.on[data-su]::before,
+.chip.on[data-oq]::before,.chip.on[data-tp]::before{content:none}
 /* nombres de las filas (MES, SEMANA, SUPERVISOR, ORDENAR POR) mas oscuros:
    el gris claro de antes costaba leerlo en proyector (30-09-2026, Luis) */
 .fila-f:has(> .chip[data-mq]) .et,.fila-f:has(> .chip[data-sq]) .et,.fila-f:has(> .chip[data-su]) .et,
@@ -1100,7 +1105,7 @@ function pintarQuiebres(semanas){
                       Object.keys(tot.resp).forEach(k => tot.resp[k] += o.resp[k]); });
 
   let h = (SOLO_QB ? '' : '<div class="fila-f"><button class="btn" id="volver">← Meses</button></div>')
-    + '<div class="fila-f"><span class="et">Mes</span>'
+    + '<div class="caja qb-filtros"><div class="fila-f"><span class="et">Mes</span>'
     + [...new Set(semanas.map(k => QB_MES_SEM[k]))].sort().reverse()
         .map(m => '<button class="chip qb-mes'+(m===mesQb?' on':'')+'" data-mq="'+m+'">'
           + nombreMes(m)+'</button>').join('')
@@ -1111,7 +1116,7 @@ function pintarQuiebres(semanas){
     + '</div><div class="fila-f"><span class="et">Supervisor</span>'
     + '<button class="chip'+(!supQb?' on':'')+'" data-su="">Todos</button>'
     + sups.map(s => '<button class="chip'+(supQb===s?' on':'')+'" data-su="'+esc(s)+'">'+esc(s)+'</button>').join('')
-    + '</div>';
+    + '</div></div>';
 
   /* tarjetas del total de la semana */
   h += '<div class="estados qb-est">'
