@@ -301,6 +301,16 @@ h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
    el gris claro de antes costaba leerlo en proyector (30-09-2026, Luis) */
 .fila-f:has(> .chip[data-mq]) .et,.fila-f:has(> .chip[data-sq]) .et,.fila-f:has(> .chip[data-su]) .et,
 .fila-f:has(> .chip[data-oq]) .et{color:#475569;font-weight:700}
+
+/* ============================================================
+   MOTIVOS DENTRO DE CADA TIPO DE ACTIVIDAD (07-10-2026)
+   Las filas que se abren bajo "Alta 1P", "Migracion 2P", etc.
+   El nombre del motivo es largo, asi que se le da mas ancho y
+   se deja partir en dos lineas. Para revertir: borrar este bloque.
+   ============================================================ */
+.hijas-caja{background:var(--zebra);border-radius:6px;margin:2px 0 8px;padding:2px 8px 2px 0}
+.hijas-caja .lin.hija .nm{width:210px;line-height:1.25}
+.hijas-caja .lin.hija:last-child{border-bottom:0}
 </style>
 </head>
 <body>
@@ -650,9 +660,13 @@ function verMes(){
   const sel = todas.filter(r => r['Estado']===estSel);
   const et = ESTADOS.find(e => e.k===estSel);
   h += '<div class="grid2">';
+  /* (07-10-2026) en No realizadas y Canceladas cada tipo se abre y muestra
+     sus motivos de cierre. En las otras dos tarjetas no: no hay motivo. */
+  const conMotivo = (estSel === 'No Realizada' || estSel === 'Cancelado');
   h += '<div class="caja"><h2>'+et.l+' por tipo de actividad'
-     + '<span class="chico">'+sel.length.toLocaleString('es-CL')+' órdenes</span></h2>'
-     + barras(sel, categoria) + '</div>';
+     + '<span class="chico">'+sel.length.toLocaleString('es-CL')+' órdenes'
+     + (conMotivo ? ' · toca un tipo para ver sus motivos' : '')+'</span></h2>'
+     + barras(sel, categoria, null, false, conMotivo ? 'Código de Cierre' : null) + '</div>';
 
   if(estSel === 'No Realizada'){
     h += panelCulpa(sel);
@@ -751,7 +765,12 @@ function tablaOrdenes(filas){
   });
   return h + '</tbody></table>';
 }
-function barras(lista, campo, tope, relevantes){
+/* 'hijasPor' (07-10-2026, pedido de Luis): si viene un campo, cada fila se
+   puede abrir y muestra debajo como se reparten SUS ordenes segun ese campo.
+   Se usa en "No realizadas por tipo de actividad": al tocar "Alta 1P" salen
+   los motivos de cierre de esas ordenes, con su cantidad y el % sobre el
+   total de ese tipo (no sobre el total del panel). */
+function barras(lista, campo, tope, relevantes, hijasPor){
   const col = (ESTADOS.find(e => e.k === estSel) || {}).c || 'var(--frio)';
   if(!lista.length) return '<div class="vacio">Sin órdenes en esta selección.</div>';
   const c = {};
@@ -781,7 +800,7 @@ function barras(lista, campo, tope, relevantes){
   pares.forEach(([k,v]) => {
     const dotacion = String(k).toLowerCase().indexOf('dotaci') >= 0;
     /* en el panel de motivos cada fila se abre y muestra sus ordenes */
-    const id = relevantes ? 'mot'+(++_nOtras) : null;
+    const id = relevantes ? 'mot'+(++_nOtras) : (hijasPor ? 'tip'+(++_nOtras) : null);
     h += '<div class="lin'+(id ? ' abrir' : '')+'"'+(id ? ' data-abre="'+id+'"' : '')+'>'
       + '<span class="nm"'
       + (dotacion ? ' style="color:var(--amarillo2);font-weight:700"' : '')+'>'+esc(k)+'</span>'
@@ -789,7 +808,25 @@ function barras(lista, campo, tope, relevantes){
       + (dotacion ? 'var(--amarillo)' : col)+'"></span></div>'
       + '<span class="vl">'+v.toLocaleString('es-CL')+'</span>'
       + '<span class="pc">'+pc(v,lista.length)+'</span></div>';
-    if(id){
+    if(id && hijasPor){
+      /* motivos de este grupo, de mas a menos */
+      const suyas = filasDe[k] || [];
+      const cm = {};
+      suyas.forEach(r => { const m = r[hijasPor] || 'Sin dato'; cm[m] = (cm[m]||0)+1; });
+      const pm = Object.entries(cm).sort((a,b) => b[1]-a[1]);
+      const maxm = pm.length ? pm[0][1] : 1;
+      h += '<div id="'+id+'" class="hijas-caja" style="display:none">';
+      pm.forEach(([m,n]) => {
+        const dot = String(m).toLowerCase().indexOf('dotaci') >= 0;
+        h += '<div class="lin hija"><span class="nm"'
+          + (dot ? ' style="color:var(--amarillo2);font-weight:700"' : '')+'>'+esc(m)+'</span>'
+          + '<div class="pista"><span style="width:'+(100*n/maxm)+'%;background:'
+          + (dot ? 'var(--amarillo)' : col)+';opacity:.55"></span></div>'
+          + '<span class="vl">'+n.toLocaleString('es-CL')+'</span>'
+          + '<span class="pc">'+pc(n,suyas.length)+'</span></div>';
+      });
+      h += '</div>';
+    } else if(id){
       h += '<div id="'+id+'" style="display:none">'
          + tablaOrdenes(filasDe[k] || []) + '</div>';
     }
