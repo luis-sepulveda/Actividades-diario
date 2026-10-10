@@ -1,0 +1,129 @@
+{
+ "generado": "10-10-2026 18:08",
+ "hasta": "09-10-2026",
+ "nota": "Migraciones de técnicos _DOMI_, visitadas = completadas + no realizadas. Incluye los export completos de completos_seguimiento.",
+ "semanas": [
+  {
+   "sem": "2026-07-27",
+   "dias": 1,
+   "n": 41,
+   "d": 18,
+   "sm": 9,
+   "re": 2,
+   "de": 6,
+   "ot": 1,
+   "completos": 1
+  },
+  {
+   "sem": "2026-08-03",
+   "dias": 6,
+   "n": 219,
+   "d": 100,
+   "sm": 41,
+   "re": 19,
+   "de": 25,
+   "ot": 15,
+   "completos": 6
+  },
+  {
+   "sem": "2026-08-10",
+   "dias": 6,
+   "n": 294,
+   "d": 123,
+   "sm": 55,
+   "re": 28,
+   "de": 20,
+   "ot": 20,
+   "completos": 6
+  },
+  {
+   "sem": "2026-08-17",
+   "dias": 6,
+   "n": 300,
+   "d": 111,
+   "sm": 49,
+   "re": 23,
+   "de": 15,
+   "ot": 24,
+   "completos": 6
+  },
+  {
+   "sem": "2026-08-24",
+   "dias": 6,
+   "n": 269,
+   "d": 106,
+   "sm": 43,
+   "re": 18,
+   "de": 17,
+   "ot": 28,
+   "completos": 6
+  },
+  {
+   "sem": "2026-08-31",
+   "dias": 6,
+   "n": 211,
+   "d": 112,
+   "sm": 38,
+   "re": 30,
+   "de": 20,
+   "ot": 24,
+   "completos": 6
+  },
+  {
+   "sem": "2026-09-07",
+   "dias": 6,
+   "n": 212,
+   "d": 94,
+   "sm": 44,
+   "re": 14,
+   "de": 16,
+   "ot": 20,
+   "completos": 6
+  },
+  {
+   "sem": "2026-09-14",
+   "dias": 4,
+   "n": 188,
+   "d": 78,
+   "sm": 33,
+   "re": 11,
+   "de": 16,
+   "ot": 18,
+   "completos": 4
+  },
+  {
+   "sem": "2026-09-21",
+   "dias": 6,
+   "n": 267,
+   "d": 113,
+   "sm": 46,
+   "re": 19,
+   "de": 20,
+   "ot": 28,
+   "completos": 4
+  },
+  {
+   "sem": "2026-09-28",
+   "dias": 6,
+   "n": 186,
+   "d": 94,
+   "sm": 43,
+   "re": 17,
+   "de": 16,
+   "ot": 18,
+   "completos": 0
+  },
+  {
+   "sem": "2026-10-05",
+   "dias": 5,
+   "n": 184,
+   "d": 100,
+   "sm": 44,
+   "re": 21,
+   "de": 12,
+   "ot": 23,
+   "completos": 0
+  }
+ ],
+ "dias_cortos": []
+}
