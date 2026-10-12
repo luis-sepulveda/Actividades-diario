@@ -1,5 +1,5 @@
 {
- "generado": "12-10-2026 07:55",
+ "generado": "12-10-2026 08:51",
  "hasta": "10-10-2026",
  "nota": "Migraciones de técnicos _DOMI_, visitadas = completadas + no realizadas. Incluye los export completos de completos_seguimiento.",
  "semanas": [
@@ -116,35 +116,16 @@
   {
    "sem": "2026-10-05",
    "dias": 6,
-   "n": 224,
-   "d": 119,
-   "sm": 50,
-   "re": 27,
-   "de": 14,
-   "ot": 28,
-   "completos": 2
+   "n": 243,
+   "d": 128,
+   "sm": 55,
+   "re": 29,
+   "de": 15,
+   "ot": 29,
+   "completos": 3
   }
  ],
- "dias_cortos": [
-  {
-   "dia": "10-10-2026",
-   "tecnicos": 23,
-   "normal": 34,
-   "faltan": [
-    "Alfredo Alcayaga F",
-    "Antonhy Morales Mendoza",
-    "Cesar Mena Oliveros",
-    "Felipe Silva R",
-    "Geeyser Perez O",
-    "Joel Gustave Gusta",
-    "Jordan Roa Perez",
-    "Kevin Tapia Retamal",
-    "Luis Castro Torres",
-    "Luis Martin Nuñez",
-    "Pablo Hernanez Fernandez"
-   ]
-  }
- ],
+ "dias_cortos": [],
  "dias_completos": [
   "01-08-2026",
   "01-09-2026",
@@ -166,6 +147,7 @@
   "09-09-2026",
   "10-08-2026",
   "10-09-2026",
+  "10-10-2026",
   "11-08-2026",
   "11-09-2026",
   "12-08-2026",
