@@ -1,6 +1,6 @@
 {
- "generado": "12-10-2026 08:51",
- "hasta": "10-10-2026",
+ "generado": "13-10-2026 07:58",
+ "hasta": "12-10-2026",
  "nota": "Migraciones de técnicos _DOMI_, visitadas = completadas + no realizadas. Incluye los export completos de completos_seguimiento.",
  "semanas": [
   {
@@ -123,6 +123,17 @@
    "de": 15,
    "ot": 29,
    "completos": 3
+  },
+  {
+   "sem": "2026-10-12",
+   "dias": 1,
+   "n": 49,
+   "d": 26,
+   "sm": 9,
+   "re": 7,
+   "de": 1,
+   "ot": 9,
+   "completos": 1
   }
  ],
  "dias_cortos": [],
@@ -152,6 +163,7 @@
   "11-09-2026",
   "12-08-2026",
   "12-09-2026",
+  "12-10-2026",
   "13-08-2026",
   "14-08-2026",
   "14-09-2026",
