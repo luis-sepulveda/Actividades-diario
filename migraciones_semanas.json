@@ -1,5 +1,5 @@
 {
- "generado": "16-10-2026 13:33",
+ "generado": "16-10-2026 15:16",
  "hasta": "15-10-2026",
  "nota": "Migraciones de técnicos _DOMI_, visitadas = completadas + no realizadas. Incluye los export completos de completos_seguimiento.",
  "semanas": [
@@ -126,13 +126,13 @@
   },
   {
    "sem": "2026-10-12",
-   "dias": 3,
-   "n": 121,
-   "d": 62,
-   "sm": 24,
-   "re": 17,
-   "de": 3,
-   "ot": 18,
+   "dias": 4,
+   "n": 165,
+   "d": 76,
+   "sm": 31,
+   "re": 18,
+   "de": 4,
+   "ot": 23,
    "completos": 1
   }
  ],
