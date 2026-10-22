@@ -25830,7 +25830,7 @@
    ]
   ]
  },
- "generado": "22-10-2026 07:37",
+ "generado": "22-10-2026 08:54",
  "hasta": "21-10-2026",
  "nota": "Migraciones de técnicos _DOMI_, visitadas = completadas + no realizadas. Incluye los export completos de completos_seguimiento.",
  "semanas": [
@@ -26033,5 +26033,1807 @@
   "29-09-2026",
   "30-09-2026",
   "31-08-2026"
- ]
+ ],
+ "fuera": {
+  "hasta": "20261021",
+  "cols": [
+   "iso",
+   "quien",
+   "e",
+   "cod",
+   "ot"
+  ],
+  "quien": [
+   [
+    "",
+    "V Quilpue"
+   ],
+   [
+    "ATLA",
+    "Cristobal Salinas"
+   ],
+   [
+    "ATLA",
+    "Flavio Lazcano Veas"
+   ],
+   [
+    "EMCO",
+    "Adrian Alball Medina"
+   ],
+   [
+    "ATLA",
+    "Miguel Guala Mo"
+   ],
+   [
+    "TRAZ",
+    "Miguel Angel Da Rosa"
+   ],
+   [
+    "ATLA",
+    "Stefan Aguilera Se"
+   ],
+   [
+    "ATLA",
+    "Juan Osorio C"
+   ],
+   [
+    "ROBI",
+    "Herbert Zuniga V"
+   ],
+   [
+    "ATLA",
+    "Felipe Caceres Rey"
+   ],
+   [
+    "EMCO",
+    "Marcelo Gray R"
+   ],
+   [
+    "EMCO",
+    "Maximiliano Rodrígu"
+   ],
+   [
+    "",
+    "V Viña"
+   ],
+   [
+    "ATLA",
+    "Eduardo Fagerstrom Zamo"
+   ]
+  ],
+  "cods": [
+   "",
+   "Sin moradores",
+   "Finalización ok",
+   "Ductos tapados",
+   "Cancelada de Siebel",
+   "Cliente reagenda",
+   "Direccion no encontrada",
+   "Cliente Desiste",
+   "No Factible",
+   "Sin apoyo vivienda-Pierrack"
+  ],
+  "ots": {
+   "1-3MX90VQQ": [
+    [
+     "20260928",
+     0,
+     "Cancelado",
+     0,
+     "1-3NJECRYX"
+    ],
+    [
+     "20261002",
+     0,
+     "Cancelado",
+     0,
+     "1-3O0JMPS3"
+    ],
+    [
+     "20261002",
+     0,
+     "Cancelado",
+     0,
+     "1-3O51ZWLN"
+    ]
+   ],
+   "1-3MTSQ6UI": [
+    [
+     "20260926",
+     0,
+     "Cancelado",
+     0,
+     "1-3O1ZON3M"
+    ]
+   ],
+   "1-3MV0XYZ3": [
+    [
+     "20260801",
+     0,
+     "Cancelado",
+     0,
+     "1-3MQYYRSA"
+    ]
+   ],
+   "1-3MV1PONS": [
+    [
+     "20261017",
+     1,
+     "No Realizada",
+     1,
+     "1-3OC2QTNH"
+    ]
+   ],
+   "1-3MWPAD1Q": [
+    [
+     "20260810",
+     0,
+     "Cancelado",
+     0,
+     "1-3N2FQHOQ"
+    ],
+    [
+     "20260811",
+     0,
+     "Cancelado",
+     0,
+     "1-3N3O8SR3"
+    ]
+   ],
+   "1-3MUZ3LQ0": [
+    [
+     "20261007",
+     2,
+     "No Realizada",
+     1,
+     "1-3O8Y2OV6"
+    ],
+    [
+     "20261008",
+     3,
+     "No Realizada",
+     1,
+     "1-3O9YL0GB"
+    ]
+   ],
+   "1-3MYCXBKG": [
+    [
+     "20261020",
+     0,
+     "Cancelado",
+     0,
+     "1-3OIBO9SW"
+    ]
+   ],
+   "1-3MVK1577": [
+    [
+     "20260820",
+     0,
+     "Cancelado",
+     0,
+     "1-3N92PT7J"
+    ]
+   ],
+   "1-3MWICOWA": [
+    [
+     "20260805",
+     0,
+     "Cancelado",
+     0,
+     "1-3MZMEFNF"
+    ]
+   ],
+   "1-3MXULF8A": [
+    [
+     "20260806",
+     0,
+     "Cancelado",
+     0,
+     "1-3N0EQZDM"
+    ]
+   ],
+   "1-3MXYYRGV": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3NCK9WFK"
+    ]
+   ],
+   "1-3MZJGJIW": [
+    [
+     "20260804",
+     0,
+     "Cancelado",
+     0,
+     "1-3MYLTKVT"
+    ],
+    [
+     "20260808",
+     0,
+     "Cancelado",
+     0,
+     "1-3N0NIA7C"
+    ]
+   ],
+   "1-3MYO2I8Q": [
+    [
+     "20260810",
+     0,
+     "Cancelado",
+     0,
+     "1-3N2FQHOQ"
+    ],
+    [
+     "20260811",
+     0,
+     "Cancelado",
+     0,
+     "1-3N3O8SR3"
+    ]
+   ],
+   "1-3MYLLD4Z": [
+    [
+     "20260804",
+     0,
+     "Cancelado",
+     0,
+     "1-3MYL08DR"
+    ]
+   ],
+   "1-3MT28BA7": [
+    [
+     "20260903",
+     0,
+     "Cancelado",
+     0,
+     "1-3N1MV87P"
+    ],
+    [
+     "20261003",
+     0,
+     "Cancelado",
+     0,
+     "1-3NJ3JKMO"
+    ]
+   ],
+   "1-3MZN2SE4": [
+    [
+     "20260805",
+     0,
+     "Cancelado",
+     0,
+     "1-3MYN5L08"
+    ]
+   ],
+   "1-3MVHLRG4": [
+    [
+     "20260805",
+     0,
+     "Cancelado",
+     0,
+     "1-3MS4CHZI"
+    ],
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3NCU16DC"
+    ]
+   ],
+   "1-3N0MXBG0": [
+    [
+     "20260805",
+     0,
+     "Cancelado",
+     0,
+     "1-3N0MQCR4"
+    ]
+   ],
+   "1-3MVN4O0P": [
+    [
+     "20260805",
+     0,
+     "Cancelado",
+     0,
+     "1-3MTBEBL1"
+    ],
+    [
+     "20260903",
+     0,
+     "Cancelado",
+     0,
+     "1-3NFPJQKK"
+    ]
+   ],
+   "1-3MZV7W6E": [
+    [
+     "20260811",
+     0,
+     "Cancelado",
+     0,
+     "1-3N360HOM"
+    ]
+   ],
+   "1-3MZYHEDC": [
+    [
+     "20260813",
+     0,
+     "Cancelado",
+     0,
+     "1-3N242HEN"
+    ]
+   ],
+   "1-3N0CP65B": [
+    [
+     "20260926",
+     0,
+     "Cancelado",
+     0,
+     "1-3NW0WS79"
+    ],
+    [
+     "20261005",
+     4,
+     "Completado",
+     2,
+     "1-3O1X7JI8"
+    ]
+   ],
+   "1-3MYRC2A6": [
+    [
+     "20261017",
+     1,
+     "No Realizada",
+     1,
+     "1-3OC2QTNH"
+    ]
+   ],
+   "1-3MZN2IKQ": [
+    [
+     "20260831",
+     0,
+     "Cancelado",
+     0,
+     "1-3NIC8WDX"
+    ]
+   ],
+   "1-3N0JKL4Q": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N61O0TW"
+    ]
+   ],
+   "1-3N1MIHTU": [
+    [
+     "20260810",
+     0,
+     "Cancelado",
+     0,
+     "1-3N2FQHOQ"
+    ],
+    [
+     "20260811",
+     0,
+     "Cancelado",
+     0,
+     "1-3N3O8SR3"
+    ]
+   ],
+   "1-3N27ATDU": [
+    [
+     "20261017",
+     5,
+     "No Realizada",
+     1,
+     "1-3O7GTDB5"
+    ]
+   ],
+   "1-3N35NMRX": [
+    [
+     "20260810",
+     0,
+     "Cancelado",
+     0,
+     "1-3N2FQHOQ"
+    ],
+    [
+     "20260811",
+     0,
+     "Cancelado",
+     0,
+     "1-3N3O8SR3"
+    ]
+   ],
+   "1-3N0GKKDE": [
+    [
+     "20260812",
+     0,
+     "Cancelado",
+     0,
+     "1-3N5KLG3Z"
+    ]
+   ],
+   "1-3N1IK474": [
+    [
+     "20261006",
+     4,
+     "Completado",
+     2,
+     "1-3O8MVBQN"
+    ]
+   ],
+   "1-3N3AJXLF": [
+    [
+     "20260812",
+     0,
+     "Cancelado",
+     0,
+     "1-3N5KLG3Z"
+    ]
+   ],
+   "1-3N375E0G": [
+    [
+     "20260831",
+     0,
+     "Cancelado",
+     0,
+     "1-3NIC8WDX"
+    ]
+   ],
+   "1-3N2IYPZ1": [
+    [
+     "20261017",
+     1,
+     "No Realizada",
+     1,
+     "1-3OC2QTNH"
+    ]
+   ],
+   "1-3N4WP0JB": [
+    [
+     "20261020",
+     0,
+     "Cancelado",
+     0,
+     "1-3OHMYVYB"
+    ],
+    [
+     "20261020",
+     0,
+     "Cancelado",
+     0,
+     "1-3OIHGJF9"
+    ]
+   ],
+   "1-3N5I0QXA": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N605IOA"
+    ]
+   ],
+   "1-3N6D1B8F": [
+    [
+     "20260911",
+     0,
+     "Cancelado",
+     0,
+     "1-3NRVG2SX"
+    ]
+   ],
+   "1-3N3418S6": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N6CDEBX"
+    ]
+   ],
+   "1-3N6CA2MK": [
+    [
+     "20260910",
+     0,
+     "Cancelado",
+     0,
+     "1-3NRVFZQC"
+    ]
+   ],
+   "1-3N6BVE4O": [
+    [
+     "20260824",
+     0,
+     "Cancelado",
+     0,
+     "1-3N73USCI"
+    ]
+   ],
+   "1-3N3U3H83": [
+    [
+     "20260901",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGB268Q"
+    ]
+   ],
+   "1-3N0G0SSY": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3NCK9WFK"
+    ]
+   ],
+   "1-3N6E4IPP": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N8AH8RB"
+    ]
+   ],
+   "1-3N7P6TWM": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N88Q0FZ"
+    ]
+   ],
+   "1-3N6FZP9P": [
+    [
+     "20260930",
+     0,
+     "Cancelado",
+     0,
+     "1-3O4GWO2F"
+    ],
+    [
+     "20260930",
+     6,
+     "No Realizada",
+     1,
+     "1-3O4HJQO2"
+    ]
+   ],
+   "1-3N6362SZ": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3N9D1MKU"
+    ]
+   ],
+   "1-3N3RQM4T": [
+    [
+     "20261005",
+     0,
+     "Cancelado",
+     0,
+     "1-3O6TCBPT"
+    ]
+   ],
+   "1-3N7SNRH7": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3N9D5IGC"
+    ]
+   ],
+   "1-3N83YI5J": [
+    [
+     "20260901",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGMK5TY"
+    ]
+   ],
+   "1-3N1QEMGI": [
+    [
+     "20260903",
+     0,
+     "Cancelado",
+     0,
+     "1-3NFPJQKK"
+    ]
+   ],
+   "1-3N9HQZ0B": [
+    [
+     "20261008",
+     1,
+     "Completado",
+     2,
+     "1-3O8OPA2K"
+    ]
+   ],
+   "1-3N8H4DN4": [
+    [
+     "20260925",
+     0,
+     "Cancelado",
+     0,
+     "1-3NWWMA5G"
+    ]
+   ],
+   "1-3N7Q9C8U": [
+    [
+     "20260901",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGB268Q"
+    ]
+   ],
+   "1-3N9US4PI": [
+    [
+     "20260831",
+     0,
+     "Cancelado",
+     0,
+     "1-3NBB8CJA"
+    ]
+   ],
+   "1-3NAOE71M": [
+    [
+     "20261019",
+     0,
+     "Cancelado",
+     0,
+     "1-3OCXBOVB"
+    ]
+   ],
+   "1-3N5H6EXD": [
+    [
+     "20260831",
+     0,
+     "Cancelado",
+     0,
+     "1-3NIC8WDX"
+    ]
+   ],
+   "1-3N6DGRN0": [
+    [
+     "20261021",
+     0,
+     "Cancelado",
+     0,
+     "1-3OED8JRC"
+    ]
+   ],
+   "1-3NA9Z7XD": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3NDU8E6U"
+    ]
+   ],
+   "1-3N7W2QXB": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3NCK9WFK"
+    ]
+   ],
+   "1-3NADYOBQ": [
+    [
+     "20260903",
+     0,
+     "Cancelado",
+     0,
+     "1-3NFPJQKK"
+    ]
+   ],
+   "1-3N7L6GYP": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3NDGCFNT"
+    ]
+   ],
+   "1-3N9DPH3X": [
+    [
+     "20260905",
+     0,
+     "Cancelado",
+     0,
+     "1-3NEH1EWB"
+    ]
+   ],
+   "1-3NB51BUP": [
+    [
+     "20260822",
+     0,
+     "Cancelado",
+     0,
+     "1-3NB4JVFK"
+    ]
+   ],
+   "1-3N922UBE": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3NEF2SMW"
+    ]
+   ],
+   "1-3N8HBERG": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3NEC70XX"
+    ]
+   ],
+   "1-3NBA4L12": [
+    [
+     "20260901",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGB268Q"
+    ]
+   ],
+   "1-3NA5YJ7Y": [
+    [
+     "20260901",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGMK5TY"
+    ]
+   ],
+   "1-3N6CEWAJ": [
+    [
+     "20260910",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGHBW6O"
+    ]
+   ],
+   "1-3NG8A2NA": [
+    [
+     "20261008",
+     7,
+     "No Realizada",
+     3,
+     "1-3O7GFDYI"
+    ]
+   ],
+   "1-3NHZK8RH": [
+    [
+     "20261014",
+     1,
+     "No Realizada",
+     1,
+     "1-3ODDXYPN"
+    ]
+   ],
+   "1-3NB093BL": [
+    [
+     "20260831",
+     0,
+     "Cancelado",
+     0,
+     "1-3NIC8WDX"
+    ]
+   ],
+   "1-3NHN5JWE": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N8AH8RB"
+    ]
+   ],
+   "1-3NHQO5PA": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N88Q0FZ"
+    ]
+   ],
+   "1-3NHMGR8M": [
+    [
+     "20260828",
+     0,
+     "Cancelado",
+     0,
+     "1-3N6CDEBX"
+    ]
+   ],
+   "1-3NIEFLBC": [
+    [
+     "20261014",
+     1,
+     "No Realizada",
+     1,
+     "1-3ODDXYPN"
+    ]
+   ],
+   "1-3NHUUPBY": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3N9D5IGC"
+    ]
+   ],
+   "1-3NHUROF3": [
+    [
+     "20260829",
+     0,
+     "Cancelado",
+     0,
+     "1-3NDU8E6U"
+    ]
+   ],
+   "1-3NKR49GD": [
+    [
+     "20260831",
+     0,
+     "Cancelado",
+     0,
+     "1-3NIC8WDX"
+    ]
+   ],
+   "1-3NJX6FS5": [
+    [
+     "20260901",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGB268Q"
+    ]
+   ],
+   "1-3NJVPGPJ": [
+    [
+     "20260901",
+     0,
+     "Cancelado",
+     0,
+     "1-3NGMK5TY"
+    ]
+   ],
+   "1-3NL1MWNG": [
+    [
+     "20260904",
+     0,
+     "Cancelado",
+     0,
+     "1-3NMI2P3O"
+    ]
+   ],
+   "1-3NM19EQP": [
+    [
+     "20260908",
+     0,
+     "Cancelado",
+     0,
+     "1-3NO1R2I1"
+    ]
+   ],
+   "1-3NN82XMK": [
+    [
+     "20260905",
+     0,
+     "Cancelado",
+     4,
+     "1-3NOAC8DN"
+    ]
+   ],
+   "1-3NMIRQU3": [
+    [
+     "20261017",
+     8,
+     "No Realizada",
+     3,
+     "1-3ODR7M2M"
+    ]
+   ],
+   "1-3NMTVUN0": [
+    [
+     "20260908",
+     0,
+     "Cancelado",
+     0,
+     "1-3NO1R2I1"
+    ]
+   ],
+   "1-3NM15ANL": [
+    [
+     "20260923",
+     0,
+     "Cancelado",
+     0,
+     "1-3NX73K4X"
+    ]
+   ],
+   "1-3NNCNAC1": [
+    [
+     "20261003",
+     0,
+     "Cancelado",
+     0,
+     "1-3O41Q1GG"
+    ]
+   ],
+   "1-3NNBIZ2N": [
+    [
+     "20260908",
+     0,
+     "Cancelado",
+     0,
+     "1-3NO1R2I1"
+    ]
+   ],
+   "1-3NHH7KFI": [
+    [
+     "20260905",
+     0,
+     "Cancelado",
+     0,
+     "1-3NEH1EWB"
+    ]
+   ],
+   "1-3NQA4IDB": [
+    [
+     "20260914",
+     0,
+     "Cancelado",
+     0,
+     "1-3NTCQDYP"
+    ]
+   ],
+   "1-3NHNJECH": [
+    [
+     "20260923",
+     0,
+     "Cancelado",
+     0,
+     "1-3NREUFYE"
+    ]
+   ],
+   "1-3NQPM20T": [
+    [
+     "20260930",
+     0,
+     "Cancelado",
+     0,
+     "1-3NR4OFRV"
+    ]
+   ],
+   "1-3NQMOWFQ": [
+    [
+     "20261007",
+     4,
+     "No Realizada",
+     3,
+     "1-3O8OUMEC"
+    ]
+   ],
+   "1-3NSTHMQD": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NSVIRZG"
+    ]
+   ],
+   "1-3NSQ3A2P": [
+    [
+     "20260911",
+     0,
+     "Cancelado",
+     0,
+     "1-3NSOIQZL"
+    ],
+    [
+     "20260928",
+     6,
+     "No Realizada",
+     1,
+     "1-3O2WUUZ9"
+    ]
+   ],
+   "1-3NSLPWI4": [
+    [
+     "20260916",
+     0,
+     "Cancelado",
+     0,
+     "1-3NV1R8RX"
+    ]
+   ],
+   "1-3NT6TEJA": [
+    [
+     "20261006",
+     0,
+     "Cancelado",
+     0,
+     "1-3O8N4YF2"
+    ]
+   ],
+   "1-3NTA3TXJ": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NUDSS1P"
+    ]
+   ],
+   "1-3NS7D8F0": [
+    [
+     "20261007",
+     4,
+     "No Realizada",
+     3,
+     "1-3O8OUMEC"
+    ]
+   ],
+   "1-3NTDHKO4": [
+    [
+     "20260914",
+     0,
+     "Cancelado",
+     0,
+     "1-3NTCQDYP"
+    ]
+   ],
+   "1-3NUBRJXX": [
+    [
+     "20261020",
+     0,
+     "Cancelado",
+     0,
+     "1-3OHPDN18"
+    ]
+   ],
+   "1-3NQLBDYH": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NVCBGKU"
+    ]
+   ],
+   "1-3NVOCTAO": [
+    [
+     "20260917",
+     0,
+     "Cancelado",
+     0,
+     "1-3NVNV4MP"
+    ]
+   ],
+   "1-3NUKDAHR": [
+    [
+     "20261007",
+     4,
+     "No Realizada",
+     3,
+     "1-3O8OUMEC"
+    ]
+   ],
+   "1-3NV7IKD4": [
+    [
+     "20260926",
+     0,
+     "Cancelado",
+     0,
+     "1-3NW0WS79"
+    ],
+    [
+     "20261005",
+     4,
+     "Completado",
+     2,
+     "1-3O1X7JI8"
+    ]
+   ],
+   "1-3NUFWQ28": [
+    [
+     "20261006",
+     0,
+     "Cancelado",
+     0,
+     "1-3O8N4YF2"
+    ]
+   ],
+   "1-3NV0CT4H": [
+    [
+     "20260925",
+     0,
+     "Cancelado",
+     0,
+     "1-3NW4BZ7H"
+    ]
+   ],
+   "1-3NUW06L3": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NWUVF3S"
+    ]
+   ],
+   "1-3NW8F66C": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NWUVF3S"
+    ]
+   ],
+   "1-3NVZZVIX": [
+    [
+     "20260923",
+     0,
+     "Cancelado",
+     0,
+     "1-3NWNYODH"
+    ],
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NWUIOPH"
+    ]
+   ],
+   "1-3NU4PZW2": [
+    [
+     "20261001",
+     0,
+     "Cancelado",
+     0,
+     "1-3NZGF41V"
+    ]
+   ],
+   "1-3NVWAJ1M": [
+    [
+     "20261006",
+     0,
+     "Cancelado",
+     0,
+     "1-3O8N4YF2"
+    ]
+   ],
+   "1-3NZDF37E": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NUZ5A3M"
+    ]
+   ],
+   "1-3NZ6LKOY": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NUDSS1P"
+    ]
+   ],
+   "1-3NZ1UTK6": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NWUIOPH"
+    ]
+   ],
+   "1-3NZEPX7A": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NSVIRZG"
+    ]
+   ],
+   "1-3O0VXFNT": [
+    [
+     "20260928",
+     0,
+     "Cancelado",
+     0,
+     "1-3O0VTX82"
+    ]
+   ],
+   "1-3NZ8SF6Y": [
+    [
+     "20260924",
+     0,
+     "Cancelado",
+     0,
+     "1-3NU9Z5ME"
+    ]
+   ],
+   "1-3O0ZDP6Y": [
+    [
+     "20260926",
+     0,
+     "Cancelado",
+     0,
+     "1-3NTBG6IT"
+    ]
+   ],
+   "1-3NZWX5L1": [
+    [
+     "20260925",
+     0,
+     "Cancelado",
+     0,
+     "1-3NHX8PUQ"
+    ]
+   ],
+   "1-3O1NEGXG": [
+    [
+     "20260930",
+     0,
+     "Cancelado",
+     0,
+     "1-3O1R4AKY"
+    ]
+   ],
+   "1-3O22TCRT": [
+    [
+     "20260930",
+     0,
+     "Cancelado",
+     0,
+     "1-3O21XHJW"
+    ]
+   ],
+   "1-3O2109A4": [
+    [
+     "20260928",
+     6,
+     "No Realizada",
+     1,
+     "1-3O393FYI"
+    ],
+    [
+     "20261016",
+     1,
+     "Completado",
+     2,
+     "1-3OF0IH0U"
+    ]
+   ],
+   "1-3O3K8KK0": [
+    [
+     "20260929",
+     6,
+     "Completado",
+     2,
+     "1-3O3N7NGT"
+    ]
+   ],
+   "1-3O2D0K6I": [
+    [
+     "20261003",
+     0,
+     "Cancelado",
+     0,
+     "1-3O3H5T0A"
+    ]
+   ],
+   "1-3O31IIXW": [
+    [
+     "20261006",
+     4,
+     "No Realizada",
+     3,
+     "1-3O4DB724"
+    ]
+   ],
+   "1-3O4BSKYD": [
+    [
+     "20261008",
+     0,
+     "Cancelado",
+     0,
+     "1-3O4EO1RX"
+    ]
+   ],
+   "1-3O1WQ0Z8": [
+    [
+     "20261003",
+     0,
+     "Cancelado",
+     0,
+     "1-3O41Q1GG"
+    ]
+   ],
+   "1-3O48FSGT": [
+    [
+     "20261010",
+     9,
+     "No Realizada",
+     5,
+     "1-3O7B1Y73"
+    ],
+    [
+     "20261017",
+     4,
+     "No Realizada",
+     6,
+     "1-3OC3GS2I"
+    ]
+   ],
+   "1-3O42Q059": [
+    [
+     "20260930",
+     10,
+     "No Realizada",
+     7,
+     "1-3O46LNX4"
+    ]
+   ],
+   "1-3O40SRKQ": [
+    [
+     "20261008",
+     9,
+     "No Realizada",
+     3,
+     "1-3O9WNQ96"
+    ]
+   ],
+   "1-3O4HFFHR": [
+    [
+     "20261002",
+     0,
+     "Cancelado",
+     0,
+     "1-3O5XREMK"
+    ]
+   ],
+   "1-3O4V9JJB": [
+    [
+     "20260930",
+     0,
+     "Cancelado",
+     0,
+     "1-3O4GWO2F"
+    ],
+    [
+     "20260930",
+     6,
+     "No Realizada",
+     1,
+     "1-3O4HJQO2"
+    ]
+   ],
+   "1-3O55CLYA": [
+    [
+     "20260930",
+     0,
+     "Cancelado",
+     0,
+     "1-3O21XHJW"
+    ]
+   ],
+   "1-3O4E6I7G": [
+    [
+     "20260930",
+     0,
+     "Cancelado",
+     0,
+     "1-3NR4OFRV"
+    ]
+   ],
+   "1-3NUWXYHV": [
+    [
+     "20261021",
+     0,
+     "Cancelado",
+     0,
+     "1-3OED8JRC"
+    ]
+   ],
+   "1-3O5WIKEQ": [
+    [
+     "20261002",
+     0,
+     "Cancelado",
+     0,
+     "1-3O5WIITX"
+    ]
+   ],
+   "1-3O5LZ7MZ": [
+    [
+     "20261005",
+     0,
+     "Cancelado",
+     0,
+     "1-3O6TCBPT"
+    ]
+   ],
+   "1-3O6JZD01": [
+    [
+     "20261010",
+     0,
+     "Cancelado",
+     0,
+     "1-3O7GNTQ0"
+    ]
+   ],
+   "1-3O6VCE98": [
+    [
+     "20261008",
+     4,
+     "No Realizada",
+     8,
+     "1-3OASNOR7"
+    ],
+    [
+     "20261008",
+     4,
+     "Cancelado",
+     0,
+     "1-3OAHC6JP"
+    ]
+   ],
+   "1-3O4DB2E3": [
+    [
+     "20261003",
+     0,
+     "Cancelado",
+     0,
+     "1-3NJ3JKMO"
+    ]
+   ],
+   "1-3O7AEBPT": [
+    [
+     "20261005",
+     0,
+     "Cancelado",
+     0,
+     "1-3O7AFK3C"
+    ]
+   ],
+   "1-3O6JUQ7L": [
+    [
+     "20261005",
+     0,
+     "Cancelado",
+     0,
+     "1-3O79YL2Y"
+    ]
+   ],
+   "1-3O7NZ5R7": [
+    [
+     "20261010",
+     0,
+     "Cancelado",
+     0,
+     "1-3O8DUJR1"
+    ]
+   ],
+   "1-3O4UDA5Q": [
+    [
+     "20261013",
+     1,
+     "Completado",
+     2,
+     "1-3O8NOEDU"
+    ]
+   ],
+   "1-3O98L2KO": [
+    [
+     "20261021",
+     0,
+     "Cancelado",
+     0,
+     "1-3OED8JRC"
+    ]
+   ],
+   "1-3O9XOYRX": [
+    [
+     "20261010",
+     4,
+     "Completado",
+     2,
+     "1-3OAA7VKL"
+    ]
+   ],
+   "1-3O9WR4ZW": [
+    [
+     "20261017",
+     11,
+     "Completado",
+     2,
+     "1-3O9ZPUJ3"
+    ]
+   ],
+   "1-3O98HHKN": [
+    [
+     "20261009",
+     4,
+     "Completado",
+     2,
+     "1-3OA0BCUU"
+    ]
+   ],
+   "1-3O9E7CCD": [
+    [
+     "20261010",
+     4,
+     "Completado",
+     2,
+     "1-3OAA7VKL"
+    ]
+   ],
+   "1-3O8UVKGI": [
+    [
+     "20261015",
+     1,
+     "No Realizada",
+     9,
+     "1-3OB1E3M3"
+    ]
+   ],
+   "1-3O97WNTB": [
+    [
+     "20261013",
+     1,
+     "No Realizada",
+     3,
+     "1-3OAZH4OS"
+    ]
+   ],
+   "1-3OASDA91": [
+    [
+     "20261010",
+     12,
+     "Cancelado",
+     0,
+     "1-3O9H46WT"
+    ]
+   ],
+   "1-3O7HO9KF": [
+    [
+     "20261016",
+     1,
+     "Completado",
+     2,
+     "1-3OC69M1R"
+    ]
+   ],
+   "1-3OBGT7T7": [
+    [
+     "20261017",
+     13,
+     "Completado",
+     2,
+     "1-3OCS54ID"
+    ]
+   ],
+   "1-3O9BATER": [
+    [
+     "20261014",
+     1,
+     "No Realizada",
+     1,
+     "1-3ODDXYPN"
+    ]
+   ],
+   "1-3OA3INJG": [
+    [
+     "20261021",
+     0,
+     "Cancelado",
+     0,
+     "1-3OED8JRC"
+    ]
+   ],
+   "1-3OB0R7PQ": [
+    [
+     "20261020",
+     0,
+     "Cancelado",
+     0,
+     "1-3OF4GNL1"
+    ]
+   ],
+   "1-3ODFUAQ4": [
+    [
+     "20261019",
+     0,
+     "Cancelado",
+     0,
+     "1-3OCXBOVB"
+    ]
+   ],
+   "1-3OCV5HQR": [
+    [
+     "20261021",
+     0,
+     "Cancelado",
+     0,
+     "1-3OFCJHAF"
+    ]
+   ],
+   "1-3OGFL7RW": [
+    [
+     "20261019",
+     0,
+     "Cancelado",
+     0,
+     "1-3OGCU9PD"
+    ]
+   ],
+   "1-3OIK7BGK": [
+    [
+     "20261020",
+     0,
+     "Cancelado",
+     0,
+     "1-3OHMYVYB"
+    ],
+    [
+     "20261020",
+     0,
+     "Cancelado",
+     0,
+     "1-3OIHGJF9"
+    ]
+   ]
+  },
+  "dias": [
+   "20260801",
+   "20260803",
+   "20260804",
+   "20260805",
+   "20260806",
+   "20260807",
+   "20260808",
+   "20260810",
+   "20260811",
+   "20260812",
+   "20260813",
+   "20260814",
+   "20260815",
+   "20260817",
+   "20260818",
+   "20260819",
+   "20260820",
+   "20260821",
+   "20260822",
+   "20260824",
+   "20260825",
+   "20260826",
+   "20260827",
+   "20260828",
+   "20260829",
+   "20260831",
+   "20260901",
+   "20260902",
+   "20260903",
+   "20260904",
+   "20260905",
+   "20260907",
+   "20260908",
+   "20260909",
+   "20260910",
+   "20260911",
+   "20260912",
+   "20260914",
+   "20260915",
+   "20260916",
+   "20260917",
+   "20260921",
+   "20260922",
+   "20260923",
+   "20260924",
+   "20260925",
+   "20260926",
+   "20260928",
+   "20260929",
+   "20260930",
+   "20261001",
+   "20261002",
+   "20261003",
+   "20261005",
+   "20261006",
+   "20261007",
+   "20261008",
+   "20261009",
+   "20261010",
+   "20261012",
+   "20261013",
+   "20261014",
+   "20261015",
+   "20261016",
+   "20261017",
+   "20261019",
+   "20261020",
+   "20261021"
+  ]
+ },
+ "dir_canc": {
+  "1-3MXANK2A": "BARROS ARANA 1772 CASA 4, QUILPUE",
+  "1-3MYLWMBH": "FELIU HURTADO 01258, QUILPUE",
+  "1-3N73PNLF": "GARAY 1189 DEPTO 33, VILLA ALEMANA",
+  "1-3N99DHFU": "AV LOS CARRERA 01428 DEPTO 12, QUILPUE",
+  "1-3NB1PZF5": "EUGENIO MATTE 467, QUILPUE",
+  "1-3NA81IMA": "ALMIRANTE NEFF 653 EDIF. 3 DEPTO 33, VILLA ALEMANA",
+  "1-3NHL2ZJB": "MICHAY 3177, QUILPUE",
+  "1-3NITDBPV": "LAS ROSAS 110 DEPTO 1405, QUILPUE",
+  "1-3NI8JNRY": "TORPEDERAS 40 DEPTO 1602, VALPARAISO",
+  "1-3NJ1W00V": "PABLO RAMIREZ 0184, QUILPUE",
+  "1-3NJKF5C8": "BERLIN 1602 EDIF. D DEPTO 406, VILLA ALEMANA",
+  "1-3NKQISW1": "RAFAEL FABRES 2560 CASA 40, QUILPUE",
+  "1-3NM7LV5L": "PJE EL OLIVAR 256, VILLA ALEMANA",
+  "1-3NNA1VRV": "JULIO VELASCO 0374, QUILPUE",
+  "1-3NNNTBNN": "TOCOPILLA 65, QUILPUE",
+  "1-3NPQJ840": "PJE CALIFORNIA 2397 CASA A, QUILPUE",
+  "1-3NPIRVPW": "LAS ACACIAS 749 EDIF. 3 DEPTO 344, VILLA ALEMANA",
+  "1-3NPSZ72C": "LAS ACACIAS 749 EDIF. 3 DEPTO 344, VILLA ALEMANA",
+  "1-3NQILG1X": "6 ORIENTE 230 DEPTO 227, VINA DEL MAR",
+  "1-3NRVO460": "PJE PEATONAL 01448 CASA C, QUILPUE",
+  "1-3NRATH6U": "PATRICIO LYNCH 898, VILLA ALEMANA",
+  "1-3NSPTYIX": "CAMINO DEL SOL 2300 CASA 3-J, QUILPUE",
+  "1-3NTCQC28": "FREIRE 438, VILLA ALEMANA",
+  "1-3NWJOAV0": "FERNANDOIS 1488, QUILPUE",
+  "1-3NYFUFW1": "LISBOA 925, QUILPUE",
+  "1-3NXJ9VEI": "HUANHUALI 418 EDIF. B5 DEPTO 42, VILLA ALEMANA",
+  "1-3NYBZXUH": "OJOS DE AGUA 108 EDIF. A1 DEPTO 201, QUILPUE",
+  "1-3NZER9RD": "PRESIDENTE KENNEDY AV. 1849, VILLA ALEMANA",
+  "1-3O0VJ9G3": "LOS ZORZALES 2310, VILLA ALEMANA",
+  "1-3O13RZPF": "CERRO ALMUD 3136, QUILPUE",
+  "1-3O16MJIW": "JUAN JOSE LATORRE 1376, QUILPUE",
+  "1-3O311Q7C": "LOS ALMENDROS 2915 EDIF. D DEPTO 24, QUILPUE",
+  "1-3O0022A3": "LOS AROMOS 1151 CASA 84, VILLA ALEMANA",
+  "1-3O46K431": "MARGA MARGA 2210, VILLA ALEMANA",
+  "1-3O4A50FQ": "MARGA MARGA 2210, VILLA ALEMANA",
+  "1-3O4SZD47": "VALDIVIA 41 CASA A, VILLA ALEMANA",
+  "1-3O7BOQZG": "LA MONEDA 3027, QUILPUE",
+  "1-3OBJTO8Q": "VALLE CENTRAL 2088, VALPARAISO",
+  "1-3OCTNUH8": "SARGENTO ALDEA 1036, QUILPUE",
+  "1-3ODH1T84": "BENJAMIN VICUNA MACKENNA 887 CASA 3, QUILPUE",
+  "1-3OCV5IJV": "RIO MAGDALENA 016, VILLA ALEMANA",
+  "1-3OF30OWO": "TERESIANAS 0128, VILLA ALEMANA",
+  "1-3OEOD2VB": "PJE VIDAL 129, QUILPUE",
+  "1-3OEYTIXN": "EL NATH 931, QUILPUE",
+  "1-3OEEV7KL": "LOS ESPINOS 291, VILLA ALEMANA"
+ }
 }
