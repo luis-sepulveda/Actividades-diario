@@ -30196,7 +30196,7 @@
    ]
   ]
  },
- "generado": "06-11-2026 07:27",
+ "generado": "06-11-2026 15:34",
  "hasta": "05-11-2026",
  "nota": "Migraciones de técnicos _DOMI_, visitadas = completadas + no realizadas. Incluye los export completos de completos_seguimiento.",
  "semanas": [
@@ -33331,5 +33331,1218 @@
   "1-3OJXTQ0Z": "CHORRILLOS 737 CASA C, QUILPUE",
   "1-3OLNGNSJ": "SERENA 171 CASA 5, QUILPUE",
   "1-3ORUIXKS": "RAMON ANGEL JARA 611 CASA N, QUILPUE"
+ },
+ "otras_dir": {
+  "cols": [
+   "iso",
+   "ot",
+   "tec",
+   "ok",
+   "cod"
+  ],
+  "d": {
+   "ARTURO PRAT 330 DEPTO 94, VINA DEL MAR": [
+    [
+     "20260801",
+     "1-3MQBJ9XB",
+     "ALEXIS JARA",
+     1,
+     ""
+    ]
+   ],
+   "LAS AZUCENAS 885 EDIF. B DEPTO 43, VINA DEL MAR": [
+    [
+     "20260801",
+     "1-3MWEHQWM",
+     "JOSE PEREZ RANGEL",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "LOS LIRIOS 87, VINA DEL MAR": [
+    [
+     "20260801",
+     "1-3MXJJPJM",
+     "JOSE PEREZ RANGEL",
+     1,
+     ""
+    ]
+   ],
+   "VON SCHROEDERS 229 EDIF. A DEPTO 409, VINA DEL MAR": [
+    [
+     "20260801",
+     "1-3MUV7RR6",
+     "RAFAEL VARGAS B",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "TRASLAVINA 229, VINA DEL MAR": [
+    [
+     "20260801",
+     "1-3MSZLJJJ",
+     "RAFAEL VARGAS B",
+     1,
+     ""
+    ]
+   ],
+   "LOS LIMONARES 399 CASA 17, VINA DEL MAR": [
+    [
+     "20260801",
+     "1-3MUZ3LQ0",
+     "RAFAEL VARGAS B",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "BUENOS AIRES 835 DEPTO 21, VALPARAISO": [
+    [
+     "20260803",
+     "1-3MY5HX2F",
+     "DANIEL NAVARRETE E",
+     1,
+     ""
+    ]
+   ],
+   "NORUEGA 397 DEPTO 41, VALPARAISO": [
+    [
+     "20260803",
+     "1-3MY08F32",
+     "ELIAS ARMIJO L",
+     1,
+     ""
+    ]
+   ],
+   "AV PORVENIR 1457 DEPTO 13, VALPARAISO": [
+    [
+     "20260807",
+     "1-3N27ATDU",
+     "ELIAS ARMIJO L",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "PROYECTADA 74 CASA A, VALPARAISO": [
+    [
+     "20260807",
+     "1-3N1L2MTZ",
+     "ELIAS ARMIJO L",
+     0,
+     "Direccion no encontrada"
+    ]
+   ],
+   "LAS CINERARIAS 640, VINA DEL MAR": [
+    [
+     "20260807",
+     "1-3N29QBLF",
+     "HERNAN CORTES HERRERA",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "LAS MALVAS 91, VINA DEL MAR": [
+    [
+     "20260807",
+     "1-3MV0EOMJ",
+     "HERNAN CORTES HERRERA",
+     1,
+     ""
+    ]
+   ],
+   "NUDO CURAUMA 810 EDIF. 6 DEPTO 633, VALPARAISO": [
+    [
+     "20260807",
+     "1-3N1MKMP6",
+     "JOSE GALAZ D",
+     1,
+     ""
+    ]
+   ],
+   "EUSEBIO LILLO 550 DEPTO 802, VALPARAISO": [
+    [
+     "20260807",
+     "1-3N2WNYNL",
+     "JOSE ROJO A",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "EL PRADO 65 DEPTO 506, VINA DEL MAR": [
+    [
+     "20260807",
+     "1-3N25PVT2",
+     "JOSE PEREZ RANGEL",
+     0,
+     "Ductos tapados"
+    ]
+   ],
+   "CHAPARRO 910, VALPARAISO": [
+    [
+     "20260808",
+     "1-3N1B63SP",
+     "PABLO HERNANEZ FERNANDEZ",
+     1,
+     ""
+    ]
+   ],
+   "LIMACHE 1280 DEPTO 701, VINA DEL MAR": [
+    [
+     "20260814",
+     "1-3N6E5WYK",
+     "ALEXIS JARA",
+     1,
+     ""
+    ]
+   ],
+   "1 NORTE 2607, VINA DEL MAR": [
+    [
+     "20260814",
+     "1-3N2XTI7Y",
+     "CRISTOBAL SILVA LEIVA",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "BALMACEDA 865 EDIF. E DEPTO 404, VINA DEL MAR": [
+    [
+     "20260826",
+     "1-3NEJ43HC",
+     "ALEXIS JARA",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "BELLAMAR 544, VALPARAISO": [
+    [
+     "20260826",
+     "1-3N9UN88D",
+     "ELIAS ARMIJO L",
+     1,
+     ""
+    ]
+   ],
+   "JOSE SUAREZ 185, VINA DEL MAR": [
+    [
+     "20260826",
+     "1-3NG8A2NA",
+     "HERNAN CORTES HERRERA",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "LOS CARDENALES 8 CASA A, VINA DEL MAR": [
+    [
+     "20260826",
+     "1-3NG7ZR24",
+     "HERNAN CORTES HERRERA",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "ALVAREZ 620, VINA DEL MAR": [
+    [
+     "20260826",
+     "1-3NGKNNY4",
+     "HERNAN CORTES HERRERA",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "GRECIA 21 EDIF. 2B2 DEPTO 201, VALPARAISO": [
+    [
+     "20260826",
+     "1-3NB1TN4B",
+     "JOSE SALAS MEDINA",
+     1,
+     ""
+    ]
+   ],
+   "FRANCISCO ECHAURREN 15, VALPARAISO": [
+    [
+     "20260828",
+     "1-3NHH0WJR",
+     "FREDERIC OVALLE V",
+     1,
+     ""
+    ]
+   ],
+   "AV ALEMANIA 4930 EDIF. A DEPTO 16, VALPARAISO": [
+    [
+     "20260828",
+     "1-3NHMUGUU",
+     "FREDERIC OVALLE V",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "TORPEDERAS 40 DEPTO 1602, VALPARAISO": [
+    [
+     "20260828",
+     "1-3NJ69O35",
+     "JOSE ROJO A",
+     1,
+     ""
+    ]
+   ],
+   "JAVIERA CARRERA 22, VALPARAISO": [
+    [
+     "20260828",
+     "1-3NHQQSHF",
+     "SEBASTIAN DOSSOW A",
+     0,
+     "NAP Problema ubicación"
+    ]
+   ],
+   "PJE DRESDEN 51, VALPARAISO": [
+    [
+     "20260829",
+     "1-3NHS05KV",
+     "FREDERIC OVALLE V",
+     1,
+     ""
+    ]
+   ],
+   "BADEN POWELL (EX CAMINO EL VERGEL) 3745, VALPARAISO": [
+    [
+     "20260829",
+     "1-3NI9R8Z2",
+     "JOSE ROJO A",
+     1,
+     ""
+    ]
+   ],
+   "LEONIDAS VALENZUELA 1142, VALPARAISO": [
+    [
+     "20260829",
+     "1-3NHNG90T",
+     "KEVIN TAPIA RETAMAL",
+     1,
+     ""
+    ]
+   ],
+   "1 NORTE 3700 CASA B1, VINA DEL MAR": [
+    [
+     "20260903",
+     "1-3NM29DE3",
+     "DANIEL NAVARRETE E",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "PUERTO DE PALOS 102 CASA A, VALPARAISO": [
+    [
+     "20260903",
+     "1-3NM59447",
+     "FREDERIC OVALLE V",
+     1,
+     ""
+    ]
+   ],
+   "AVENIDA LAGUNA DE CURAUMA 432, VALPARAISO": [
+    [
+     "20260903",
+     "1-3NMIRQU3",
+     "JOSE ROJO A",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "ALVAREZ(VILLANELO) 402 OFIC CONSERJE, VINA DEL MAR": [
+    [
+     "20260903",
+     "1-3NMN8HDB",
+     "ALEXIS JARA",
+     0,
+     "NAP Problema acceso"
+    ]
+   ],
+   "VIANA 433 DEPTO 1006, VINA DEL MAR": [
+    [
+     "20260903",
+     "1-3NMS644O",
+     "ALEXIS JARA",
+     1,
+     ""
+    ]
+   ],
+   "PJE A(LOURDES) 1, VINA DEL MAR": [
+    [
+     "20260904",
+     "1-3NNJA7QJ",
+     "DANIEL NAVARRETE E",
+     0,
+     "Direccion no encontrada"
+    ]
+   ],
+   "CICARELLI 4, VALPARAISO": [
+    [
+     "20260904",
+     "1-3NHVWNIQ",
+     "ELIAS ARMIJO L",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "GRAN BRETANA 297, VALPARAISO": [
+    [
+     "20260904",
+     "1-3NNAJGTO",
+     "FREDERIC OVALLE V",
+     1,
+     ""
+    ]
+   ],
+   "FRANCISCO VERGARA 327, VALPARAISO": [
+    [
+     "20260904",
+     "1-3NN7U53R",
+     "FREDERIC OVALLE V",
+     1,
+     ""
+    ]
+   ],
+   "JAVIERA CARRERA 651, VALPARAISO": [
+    [
+     "20260904",
+     "1-3NM577M8",
+     "JOSE ROJO A",
+     1,
+     ""
+    ]
+   ],
+   "AVENIDA NUEVA LIBERTAD 1405 OFIC 402, VINA DEL MAR": [
+    [
+     "20260904",
+     "1-3NMY0AD5",
+     "ALEXIS JARA",
+     0,
+     "Cliente reagenda"
+    ],
+    [
+     "20260910",
+     "1-3NQK5G3T",
+     "ALEXIS JARA",
+     1,
+     ""
+    ]
+   ],
+   "DIGENIA 314, VINA DEL MAR": [
+    [
+     "20260904",
+     "1-3NNKMI3J",
+     "ALEXIS JARA",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "AVENIDA ALEJANDRO NAVARRETE 3099 EDIF. 2 DEPTO 12, VINA DEL MAR": [
+    [
+     "20260904",
+     "1-3NMNWW5S",
+     "ALEXIS JARA",
+     1,
+     ""
+    ]
+   ],
+   "LAGO MAIHUE 637, VINA DEL MAR": [
+    [
+     "20260905",
+     "1-3NG7K8GX",
+     "ALEXIS JARA",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "TEGULA 175 CASA 6, VINA DEL MAR": [
+    [
+     "20260909",
+     "1-3NQMZIHR",
+     "JOSE SALAS MEDINA",
+     0,
+     "Ductos tapados"
+    ]
+   ],
+   "BAHIA OCEANO 173, VINA DEL MAR": [
+    [
+     "20260910",
+     "1-3NRDIMM0",
+     "JOSE PEREZ RANGEL",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "LOS ABETOS 139, VINA DEL MAR": [
+    [
+     "20260910",
+     "1-3NRK7D97",
+     "JOSE PEREZ RANGEL",
+     1,
+     ""
+    ]
+   ],
+   "LAGO ELIZALDE 285, VINA DEL MAR": [
+    [
+     "20260911",
+     "1-3NRZ1T9Q",
+     "MARCO PEREZ G",
+     1,
+     ""
+    ]
+   ],
+   "ECHAURREN 1175 CASA 36, QUILLOTA": [
+    [
+     "20260917",
+     "1-3NW4GZMC",
+     "MARCELO GÓMEZ GÓME",
+     0,
+     "Falla Masiva"
+    ]
+   ],
+   "7 NORTE 1122 DEPTO 23, VINA DEL MAR": [
+    [
+     "20260929",
+     "1-3O2165YM",
+     "JOSE GALAZ D",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "ULISES POURRIER 035, VINA DEL MAR": [
+    [
+     "20260929",
+     "1-3O48FSGT",
+     "MARCO PEREZ G",
+     0,
+     "Falta de dotación"
+    ]
+   ],
+   "BARROS ARANA 175 CASA A, VINA DEL MAR": [
+    [
+     "20260929",
+     "1-3O42Q059",
+     "RAFAEL VARGAS B",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "JULIO FOSSA 540, VINA DEL MAR": [
+    [
+     "20260929",
+     "1-3O40SRKQ",
+     "FELIPE SILVA R",
+     0,
+     "Ductos tapados"
+    ]
+   ],
+   "PJE MAPOCHO 231, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O4TASHM",
+     "ALEXIS JARA",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "PUCARA 290 DEPTO 22, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O3K4YOT",
+     "ALEXIS JARA",
+     1,
+     ""
+    ]
+   ],
+   "LAS CAMELIAS(CARLOS IBANEZ) 7, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O40MNW4",
+     "JOSE GALAZ D",
+     1,
+     ""
+    ]
+   ],
+   "HORTENCIA 14, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O4KWNWK",
+     "MARCO PEREZ G",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "MONTANA 788 DEPTO 44, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O4FNPGP",
+     "MARCO PEREZ G",
+     1,
+     ""
+    ]
+   ],
+   "24 NORTE 1777 EDIF. T2 DEPTO 34, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O0F8JQK",
+     "RAFAEL VARGAS B",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "ALVAREZ 58 DEPTO 159, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O46X5PQ",
+     "RAFAEL VARGAS B",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "EL MAITEN 3130 EDIF. 6 DEPTO 37, VINA DEL MAR": [
+    [
+     "20260930",
+     "1-3O2MTL36",
+     "FELIPE SILVA R",
+     1,
+     ""
+    ]
+   ],
+   "CALLE 2 209 CASA B, VINA DEL MAR": [
+    [
+     "20261001",
+     "1-3O4AGP8F",
+     "MARCO PEREZ G",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "AVENIDA CARLOS IBANEZ DEL CAMPO 505 CASA A, VINA DEL MAR": [
+    [
+     "20261001",
+     "1-3O509DJ3",
+     "ALEXIS JARA",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "RIO PURAPEL 51, VINA DEL MAR": [
+    [
+     "20261001",
+     "1-3O5SB2YT",
+     "ALEXIS JARA",
+     1,
+     ""
+    ]
+   ],
+   "BARROS ARANA 795 EDIF. A DEPTO 44, VINA DEL MAR": [
+    [
+     "20261001",
+     "1-3O3Q0IV9",
+     "JOSE GALAZ D",
+     1,
+     ""
+    ]
+   ],
+   "MONRROY 20, VALPARAISO": [
+    [
+     "20261007",
+     "1-3OA1XWNX",
+     "JOSE GALAZ D",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "AVENIDA SAN MARTIN 540 EDIF. A DEPTO 21, VINA DEL MAR": [
+    [
+     "20261008",
+     "1-3O9L52EH",
+     "RAFAEL VARGAS B",
+     1,
+     ""
+    ]
+   ],
+   "PJE 4 (POB EMPORCHI) 56, VINA DEL MAR": [
+    [
+     "20261008",
+     "1-3OAQRQQP",
+     "RAFAEL VARGAS B",
+     0,
+     "NAP Problema ubicación"
+    ]
+   ],
+   "7 NORTE 1620 DEPTO 2405, VINA DEL MAR": [
+    [
+     "20261008",
+     "1-3O9EF86X",
+     "ALEXIS JARA",
+     0,
+     "Sin Red"
+    ]
+   ],
+   "5 PONIENTE 146 CASA C, VINA DEL MAR": [
+    [
+     "20261008",
+     "1-3OASDA91",
+     "ALEXIS JARA",
+     0,
+     "Falta de dotación"
+    ]
+   ],
+   "LOS CASTANOS 331 DEPTO 702, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OC2FB3L",
+     "ALFREDO ALCAYAGA F",
+     1,
+     ""
+    ]
+   ],
+   "CAMINO FISCAL 38, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OC1PNHO",
+     "ANTONHY MORALES MENDOZA",
+     1,
+     ""
+    ]
+   ],
+   "AV MATTA 591, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OBG2286",
+     "CESAR MENA OLIVEROS",
+     1,
+     ""
+    ]
+   ],
+   "ARICA 628, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OBGT7T7",
+     "FELIPE SILVA R",
+     0,
+     "Sin apoyo vivienda-Pierrack"
+    ]
+   ],
+   "EDMUNDO ELUCHANS 1737 DEPTO 128, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OBRFI50",
+     "FELIPE SILVA R",
+     0,
+     "Ductos tapados"
+    ]
+   ],
+   "AV VICUNA MACKENNA 330 EDIF. B DEPTO 33, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OCBEF91",
+     "FELIPE SILVA R",
+     0,
+     "Ductos tapados"
+    ]
+   ],
+   "QUINTA 236 CASA C, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OC22L66",
+     "GEEYSER PEREZ O",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "20 NORTE 1690, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3O9BK6AM",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "AV AGUA POTABLE 60, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OCQ0LKH",
+     "JORDAN ROA PEREZ",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "PAULA JARAQUEMADA 626 CASA B, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OBUV7L7",
+     "JOSE GALAZ D",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "SIMPSON 428, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OC4Q3S7",
+     "JOSE GALAZ D",
+     1,
+     ""
+    ]
+   ],
+   "TIRO AL BLANCO 105, VALPARAISO": [
+    [
+     "20261012",
+     "1-3O6N0XO1",
+     "JOSE GALAZ D",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "CURAUMILLA 1037, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OC5J658",
+     "JOSE GALAZ D",
+     0,
+     "Falta de dotación"
+    ]
+   ],
+   "CHUNGARA 61, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OBQ7O0C",
+     "KEVIN TAPIA RETAMAL",
+     0,
+     "Direccion no encontrada"
+    ]
+   ],
+   "AV LAS MARAVILLAS 565, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OC8Y725",
+     "KEVIN TAPIA RETAMAL",
+     1,
+     ""
+    ]
+   ],
+   "PRINCIPAL(NODO 44) 52, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OCSU694",
+     "LUIS CASTRO TORRES",
+     0,
+     "Cliente Desiste"
+    ]
+   ],
+   "ANCUD 145, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OBR09G0",
+     "LUIS MARTIN NUÑEZ",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "AVENIDA NUEVA LIBERTAD 1630 DEPTO 1303, VINA DEL MAR": [
+    [
+     "20261012",
+     "1-3OC538R2",
+     "LUIS MARTIN NUÑEZ",
+     1,
+     ""
+    ]
+   ],
+   "AV BAQUEDANO 955, VALPARAISO": [
+    [
+     "20261012",
+     "1-3OC119BR",
+     "JOEL GUSTAVE GUSTA",
+     1,
+     ""
+    ]
+   ],
+   "LITORINA 270 DEPTO 12, VINA DEL MAR": [
+    [
+     "20261017",
+     "1-3O99WUZ0",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "LAURENCIA 420 DEPTO 802, VINA DEL MAR": [
+    [
+     "20261017",
+     "1-3ODX37D0",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "3 NORTE 220 DEPTO 1302, VINA DEL MAR": [
+    [
+     "20261017",
+     "1-3O51BYWA",
+     "YENDER BOSCAN CADENAS",
+     1,
+     ""
+    ]
+   ],
+   "EDMUNDO ELUCHANS 2705 DEPTO 81, VINA DEL MAR": [
+    [
+     "20261017",
+     "1-3OC2B212",
+     "YENDER BOSCAN CADENAS",
+     1,
+     ""
+    ]
+   ],
+   "ALVAREZ 132 DEPTO 219, VINA DEL MAR": [
+    [
+     "20261022",
+     "1-3OJ2TJLH",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "BORINQUEN 2 EDIF. FRA 3 DEPTO 73, VINA DEL MAR": [
+    [
+     "20261023",
+     "1-3OK1QF96",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "EDMUNDO ELUCHANS 2145 DEPTO 2503, VINA DEL MAR": [
+    [
+     "20261023",
+     "1-3OIBFZ6J",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "3 NORTE 220 DEPTO 1306, VINA DEL MAR": [
+    [
+     "20261023",
+     "1-3OE7F6HA",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "JOSE MARIA ESCRIVA DE BALAGUER 770 DEPTO 905, VINA DEL MAR": [
+    [
+     "20261024",
+     "1-3OLN5XYT",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "JACKSON 820 EDIF. X DEPTO 182, VINA DEL MAR": [
+    [
+     "20261026",
+     "1-3OKXYSMK",
+     "FELIPE SILVA R",
+     1,
+     ""
+    ]
+   ],
+   "EDMUNDO ELUCHANS 2415 DEPTO 241, VINA DEL MAR": [
+    [
+     "20261026",
+     "1-3OK6OMXW",
+     "FELIPE SILVA R",
+     0,
+     "Cliente reagenda"
+    ],
+    [
+     "20261028",
+     "1-3OMPPISY",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "ERRAZURIZ 531 DEPTO 1101, VINA DEL MAR": [
+    [
+     "20261026",
+     "1-3OJZVULH",
+     "GEEYSER PEREZ O",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "AVENIDA BORGONO 17720 DEPTO 1804, VINA DEL MAR": [
+    [
+     "20261027",
+     "1-3OL2PUIE",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "7 NORTE 360 DEPTO 33, VINA DEL MAR": [
+    [
+     "20261027",
+     "1-3OME1MB4",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "5 ORIENTE 0225 DEPTO 601, VINA DEL MAR": [
+    [
+     "20261027",
+     "1-3OLP78CI",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "3 NORTE 181 EDIF. D DEPTO 6, VINA DEL MAR": [
+    [
+     "20261028",
+     "1-3ON72IKY",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "AVENIDA ALMIRANTE GOMEZ CARRENO 3707 DEPTO 48, VINA DEL MAR": [
+    [
+     "20261029",
+     "1-3ONLMYD7",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "LIMACHE 1280 DEPTO 505, VINA DEL MAR": [
+    [
+     "20261029",
+     "1-3ONWA7Z5",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "LIMACHE 1280 DEPTO 403, VINA DEL MAR": [
+    [
+     "20261030",
+     "1-3ONEK5WQ",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "AVENIDA BORGONO 17720 DEPTO 1008, VINA DEL MAR": [
+    [
+     "20261030",
+     "1-3ON72YTD",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "JOSE ORREGO 199 EDIF. G DEPTO 12, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3ONH11SS",
+     "GEEYSER PEREZ O",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "COSTA DE MONTEMAR 710 DEPTO 241, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3OMR3ZJG",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "21 PONIENTE 5860, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3ON6AZXV",
+     "PABLO HERNANEZ FERNANDEZ",
+     1,
+     ""
+    ]
+   ],
+   "AVENIDA ALMIRANTE GOMEZ CARRENO 3707 DEPTO 31, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3ONXL2AJ",
+     "SEBASTIAN DOSSOW A",
+     1,
+     ""
+    ]
+   ],
+   "MAGALLANES 319 CASA B, VALPARAISO": [
+    [
+     "20261031",
+     "1-3OPL2NO0",
+     "JOSE GALAZ D",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "19 DE JUNIO INVESTIGACIONES DE CHILE 1520 CASA B, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3OO43X0O",
+     "LUIS CASTRO TORRES",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "3 ORIENTE 1270 EDIF. B DEPTO 35, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3ONDL73O",
+     "LUIS MARTIN NUÑEZ",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "BOSQUES DE MONTEMAR 400 DEPTO 162, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3OQ69OFJ",
+     "NICOLAS MOYANO R",
+     0,
+     "Sin moradores"
+    ]
+   ],
+   "ULISES POURRIER 51, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3ONSFVAK",
+     "MATIAS APELEO APELEO",
+     1,
+     ""
+    ]
+   ],
+   "LAS AZUCENAS 885 EDIF. H DEPTO 41, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3ONJ6XYL",
+     "MATÍAS JAQUE AG",
+     1,
+     ""
+    ]
+   ],
+   "AVENIDA PRINCIPAL (POB CARDENAL CARO) 24, VINA DEL MAR": [
+    [
+     "20261031",
+     "1-3ONXGX4W",
+     "MATÍAS JAQUE AG",
+     0,
+     "NAP Problema ubicación"
+    ]
+   ],
+   "ECHAURREN 1175 CASA 35, QUILLOTA": [
+    [
+     "20261102",
+     "1-3OOYI5UO",
+     "CESAR MENA OLIVEROS",
+     0,
+     "Sin acceso a vivienda"
+    ]
+   ],
+   "LOS LAURELES 17, QUILLOTA": [
+    [
+     "20261102",
+     "1-3OO0LAY1",
+     "CESAR MENA OLIVEROS",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "BERGER 275 EDIF. A DEPTO 44, VINA DEL MAR": [
+    [
+     "20261102",
+     "1-3ONYSXAS",
+     "GEEYSER PEREZ O",
+     0,
+     "Cliente reagenda"
+    ]
+   ],
+   "JACKSON 820 EDIF. X DEPTO 75, VINA DEL MAR": [
+    [
+     "20261102",
+     "1-3OPLAMRG",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "ANGAMOS 367 EDIF. A DEPTO 308, VINA DEL MAR": [
+    [
+     "20261102",
+     "1-3OO0ZURZ",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "LAS AGATAS 489 EDIF. B DEPTO 1307, VINA DEL MAR": [
+    [
+     "20261103",
+     "1-3OMEHAX2",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "LIQUIDAMBAR 757 DEPTO 001, VINA DEL MAR": [
+    [
+     "20261103",
+     "1-3ORN9R7I",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "VIANA 967 DEPTO 1013, VINA DEL MAR": [
+    [
+     "20261103",
+     "1-3OOXZE8Y",
+     "GEEYSER PEREZ O",
+     1,
+     ""
+    ]
+   ],
+   "AV JARDINES DE RENACA 50 EDIF. MAR A2 DEPTO 145, VINA DEL MAR": [
+    [
+     "20261104",
+     "1-3OMII1GQ",
+     "GEEYSER PEREZ O",
+     0,
+     "Direccion no encontrada"
+    ]
+   ],
+   "VON SCHROEDERS 229 EDIF. A DEPTO 1601, VINA DEL MAR": [
+    [
+     "20261104",
+     "1-3OS5KCTY",
+     "GEEYSER PEREZ O",
+     0,
+     "Ductos tapados"
+    ]
+   ],
+   "VON SCHROEDERS 273 EDIF. B DEPTO 302, VINA DEL MAR": [
+    [
+     "20261105",
+     "1-3OSMEDE1",
+     "MATIAS APELEO APELEO",
+     1,
+     ""
+    ]
+   ]
+  }
  }
 }
